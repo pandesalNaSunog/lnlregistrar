@@ -1,0 +1,13 @@
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-size:smaller;
+}
+
+.fixed-button{
+  position: fixed;
+  right: 70px;
+  bottom: 50px;
+  z-index: 1;
+}
+

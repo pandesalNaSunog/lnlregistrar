@@ -1,0 +1,1 @@
+<p class="text-danger"><small>{{ $slot }}</small></p>
