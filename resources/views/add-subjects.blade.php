@@ -16,43 +16,43 @@
                     <div class="card-body">
                         <div class="col">
                             <label class="text-secondary">Name</label>
-                            <h5 class="fw-bold">{{ $student->last_name . ", " . $student->first_name . " " . $student->middle_name }}</h5>
+                            <p class="fw-bold">{{ $student->last_name . ", " . $student->first_name . " " . $student->middle_name }}</p>
                         </div>
                         <div class="col">
                             <label class="text-secondary">Program</label>
-                            <h5 class="fw-bold">{{ $program->program }}</h5>
+                            <p class="fw-bold">{{ $program->program }}</p>
                         </div>
                         <div class="col">
                             <label class="text-secondary">Civil Status</label>
-                            <h5 class="fw-bold">{{ $student->civil_status }}</h5>
+                            <p class="fw-bold">{{ $student->civil_status }}</p>
                         </div>
                         <div class="col">
                             <label class="text-secondary">Gender</label>
-                            <h5 class="fw-bold">{{ $student->gender }}</h5>
+                            <p class="fw-bold">{{ $student->gender }}</p>
                         </div>
                         <div class="col">
                             <label class="text-secondary">Date of Birth</label>
-                            <h5 class="fw-bold">{{ $student->date_of_birth }}</h5>
+                            <p class="fw-bold">{{ $student->date_of_birth }}</p>
                         </div>
                         <div class="col">
                             <label class="text-secondary">Place of Birth</label>
-                            <h5 class="fw-bold">{{ $student->place_of_birth }}</h5>
+                            <p class="fw-bold">{{ $student->place_of_birth }}</p>
                         </div>
                         <div class="col">
                             <label class="text-secondary">Guardian</label>
-                            <h5 class="fw-bold">{{ "Mr. and Mrs. " . $student->guardian }}</h5>
+                            <p class="fw-bold">{{ "Mr. and Mrs. " . $student->guardian }}</p>
                         </div>
                         <div class="col">
                             <label class="text-secondary">Contact Number</label>
-                            <h5 class="fw-bold">{{ $student->contact_number }}</h5>
+                            <p class="fw-bold">{{ $student->contact_number }}</h5>
                         </div>
                         <div class="col">
                             <label class="text-secondary">Address</label>
-                            <h5 class="fw-bold">{{ $student->address }}</h5>
+                            <p class="fw-bold">{{ $student->address }}</p>
                         </div>
                         <div class="col">
                             <label class="text-secondary">Email</label>
-                            <h5 class="fw-bold">{{ $student->email }}</h5>
+                            <p class="fw-bold">{{ $student->email }}</p>
                         </div>
                     </div>
                 </div>
@@ -72,7 +72,15 @@
                                     <th>Lab Units</th>
                                 </thead>
                                 <tbody>
+                                    @foreach($enrolledSubjects as $subject)
+                                        <tr>
 
+                                            <td>{{ $subject['course_code'] }}</td>
+                                            <td>{{ $subject['descriptive_title'] }}</td>
+                                            <td>{{ $subject['lec_units'] }}</td>
+                                            <td>{{ $subject['lab_units'] }}</td>
+                                        </tr>
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

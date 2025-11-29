@@ -33,10 +33,10 @@
                                 </td>
                                 <td>{{ $student->middle_name }}</td>
                                 <td>
-                                    <form action="{{ route('add-enrollment-subjects',$student->id) }}" method="post">
-                                        @csrf
+                                    <a href={{ route('add-enrollment-subjects',$student->id) }}>
+                              
                                         <button class="btn btn-outline-success px-5"><small>Enroll</small></button>
-                                    </form>  
+                                    </a>
                                 </td>
                             </tr>
                             @endforeach

@@ -8,6 +8,7 @@ use App\Models\Subject;
 use App\Models\Semester;
 use App\Models\Enrollment;
 use App\Models\AcademicYear;
+use App\Models\SubjectEnrolled;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -59,12 +60,43 @@ class EnrollmentController extends Controller
         }
         $program = Program::where('id', $student->program_id)->first();
         $programSubjects = Subject::where('program_id', $program->id)->orderBy('course_code','asc')->get();
+        $enrolledSubjects = SubjectEnrolled::where('enrollment_id',$enrollmentInstance->id)->get();
+
+        $subjects = [];
+        foreach($enrolledSubjects as $subject){
+            $subjectInstance = Subject::where('id', $subject->subject_id)->first();
+            $subjects[] = [
+                'id' => $subject->id,
+                'course_code' => $subjectInstance->course_code,
+                'descriptive_title' => $subjectInstance->descriptive_title,
+                'lec_units' => $subjectInstance->lec_units,
+                'lab_units' => $subjectInstance->lab_units
+            ];
+        }
         return view('add-subjects',[
             'enrollment' => $enrollmentInstance,
             'program' => $program,
             'user' => Auth::user(),
             'student' => $student,
-            'subjects' => $programSubjects
+            'subjects' => $programSubjects,
+            'enrolledSubjects' => $subjects
         ]);
+    }
+
+    public function postAddEnrolledSubject(Request $request, Enrollment $enrollment){
+        $hasEnrolledSubject = SubjectEnrolled::where('enrollment_id', $enrollment->id)->where('subject_id',$request->subject_id)->first();
+
+        if(!$hasEnrolledSubject){
+            SubjectEnrolled::create([
+                'enrollment_id' => $enrollment->id,
+                'subject_id' => $request->subject_id,
+                'prelim' => 0,
+                'midterm' => 0,
+                'semi_final' => 0,
+                'final' => 0
+            ]);
+        }
+
+        return back();
     }
 }

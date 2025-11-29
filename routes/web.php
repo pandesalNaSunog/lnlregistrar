@@ -26,9 +26,10 @@ Route::middleware('auth')->group(function(){
     Route::get('/add-enrollee/{program}',[EnrollmentController::class,'addEnrolleeView'])->name('add-enrollee');
     Route::get('/add-student/{program}',[StudentController::class,'addStudentView'])->name('add-student');
     Route::post('/add-student',[StudentController::class,'postAddStudent'])->name('post-add-student');
-    Route::post('/add-enrollment-subjects/{student}',[EnrollmentController::class,'addSubjects'])->name('add-enrollment-subjects');
+    Route::get('/add-enrollment-subjects/{student}',[EnrollmentController::class,'addSubjects'])->name('add-enrollment-subjects');
     Route::get('/active-semester',[SemesterController::class,'activeSemester'])->name('active-semester');
     Route::post('/update-active-semester',[SemesterController::class,'updateActiveSemester'])->name('update-active-semester');
+    Route::post('/add-enrolled-subject/{enrollment}',[EnrollmentController::class,'postAddEnrolledSubject'])->name('post-add-enrolled-subject');
 });
 
 Route::middleware('guest')->group(function(){
