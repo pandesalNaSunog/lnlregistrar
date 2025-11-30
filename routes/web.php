@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function(){
     Route::get('/student-records',[StudentController::class,'viewStudentRecords'])->name('student-records');
     Route::get('/search-student',[StudentController::class,'searchStudent'])->name('search-student');
     Route::get('/searched-students',[StudentController::class,'searchedStudents'])->name('searched-students');
+    Route::get('/student-record/{student}',[StudentController::class,'viewStudentRecord'])->name('student-record');
 });
 
 Route::middleware('guest')->group(function(){

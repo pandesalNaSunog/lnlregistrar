@@ -18,16 +18,18 @@
                 <div class="table-responsive">
                     <table class="table table-striped table-hover">
                         <thead>
-                            <th>Last Name</th>
-                            <th>First Name</th>
-                            <th>Middle Name</th>
+                            <th>Name</th>
+                            <th>Course</th>
+                            <th>Action</th>
                         </thead>
                         <tbody>
-                            @foreach($students as $student)
+                            @foreach($students as $key => $student)
                             <tr>
-                                <td>{{ $student->last_name }}</td>
-                                <td>{{ $student->first_name }}</td>
-                                <td>{{ $student->middle_name }}</td>
+                                <td>{{ $student->last_name . ", " . $student->first_name . " " . $student->middle_name }}</td>
+                                <td>{{ $courses[$key]['course'] }}</td>
+                                <td>
+                                    <a href="{{ route('student-record',$student->id) }}"><button class="btn btn-outline-success px-5"><small>View Records</small></button></a>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>
