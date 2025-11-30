@@ -39,7 +39,7 @@
                         
                     </div>
                 </div>
-                <a href="{{ route('add-enrollee',$program->id) }}"><button class="btn btn-success px-5 mt-3">Add Enrollee</button></a>
+                <a href="{{ route('add-enrollee',$program->id) }}"><button class="btn btn-success px-5 mt-3">Student List</button></a>
             </div>
         </div>
     </div>

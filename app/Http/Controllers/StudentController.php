@@ -29,4 +29,18 @@ class StudentController extends Controller
             'program' => $program
         ]);
     }
+
+    public function viewStudentRecords(){
+        return view('student-records',[
+            'user' => Auth::user()
+        ]);
+    }
+    public function searchStudent(Request $request){
+        $user = Auth::user();
+        $student = Student::where('last_name','like','%'.$request->last_name.'%')->where('first_name','like','%'.$request->first_name.'%')->where('middle_name','like','%'.$request->middle_name.'%')->orderBy('last_name','asc')->get();
+        return view('searched-students',[
+            'students' => $student,
+            'user' => $user
+        ]);
+    }
 }

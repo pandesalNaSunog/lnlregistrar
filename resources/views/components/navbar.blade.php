@@ -13,6 +13,9 @@
                         <a href="{{ route('enrollment') }}" class="nav-link active">Enrollment</a>
                     </li>
                     <li class="nav-item ms-4">
+                        <a href="{{ route('student-records') }}" class="nav-link active">Student Records</a>
+                    </li>
+                    <li class="nav-item ms-4">
                         <a href="{{ route('active-semester') }}" class="nav-link active">Active Semester</a>
                     </li>
                     <li class="nav-item ms-4">

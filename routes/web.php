@@ -30,6 +30,9 @@ Route::middleware('auth')->group(function(){
     Route::get('/active-semester',[SemesterController::class,'activeSemester'])->name('active-semester');
     Route::post('/update-active-semester',[SemesterController::class,'updateActiveSemester'])->name('update-active-semester');
     Route::post('/add-enrolled-subject/{enrollment}',[EnrollmentController::class,'postAddEnrolledSubject'])->name('post-add-enrolled-subject');
+    Route::get('/student-records',[StudentController::class,'viewStudentRecords'])->name('student-records');
+    Route::get('/search-student',[StudentController::class,'searchStudent'])->name('search-student');
+    Route::get('/searched-students',[StudentController::class,'searchedStudents'])->name('searched-students');
 });
 
 Route::middleware('guest')->group(function(){
