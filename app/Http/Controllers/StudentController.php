@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AcademicYear;
 use App\Models\Program;
 use App\Models\Student;
 use App\Models\Subject;
+use App\Models\Semester;
 use App\Models\Enrollment;
 use Illuminate\Http\Request;
 use App\Models\SubjectEnrolled;
@@ -84,6 +86,15 @@ class StudentController extends Controller
             'enrolledSubjects' => $enrolledSubjectData,
             'units' => $unitsData,
             'grades' => $gradeData
+        ]);
+    }
+    public function grades(){
+        $academicYears = AcademicYear::orderBy('academic_year','desc')->get();
+        $sem = Semester::first();
+        return view('grades',[
+            'user' => Auth::user(),
+            'academicYears' => $academicYears,
+            'activeSemester' => $sem
         ]);
     }
 }

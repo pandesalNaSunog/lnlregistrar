@@ -11,6 +11,12 @@
     <x-navbar :user="$user"></x-navbar>
 
     <div class="container py-5">
+        <nav style="--bs-breadcrumb-divider: '>'; color: green; text-decoration: none;" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('enrollment') }}">Enrollment</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $program->program }}</li>
+            </ol>
+        </nav>
         <div class="row row-cols-1 row-cols-lg-2 g-3">
             <div class="col col-lg-3">
                 <div class="card shadow">

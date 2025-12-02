@@ -90,10 +90,10 @@ class EnrollmentController extends Controller
             SubjectEnrolled::create([
                 'enrollment_id' => $enrollment->id,
                 'subject_id' => $request->subject_id,
-                'prelim' => 0,
-                'midterm' => 0,
-                'semi_final' => 0,
-                'final' => 0
+                'prelim' => 'IP',
+                'midterm' => 'IP',
+                'semi_final' => 'IP',
+                'final' => 'IP'
             ]);
         }
 

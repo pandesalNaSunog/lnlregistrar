@@ -11,6 +11,13 @@
     <x-navbar :user="$user"></x-navbar>
 
     <div class="container py-5">
+        <nav style="--bs-breadcrumb-divider: '>'; color: green; text-decoration: none;" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('enrollment') }}">Enrollment</a></li>
+                <li class="breadcrumb-item"><a href="{{ route('enrollment-list',$program->id) }}">{{ $program->program }}</a></li>
+                <li class="breadcrumb-item active">Student List</li> 
+            </ol>
+        </nav>
         <div class="card shadow">
             <div class="card-header">
                 <h5 class="fw-bold">{{ $program->program . " Student List" }}</h5>

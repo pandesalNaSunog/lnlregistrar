@@ -10,7 +10,8 @@
 <body>
     <x-navbar :user="$user"></x-navbar>
     <div class="container py-5">
-        <div class="card shadow">
+    
+        <div class="card shadow mt-3">
             <div class="card-header">
                 <h5 class="fw-bold">Search Results</h5>
             </div>
