@@ -163,7 +163,7 @@ class ProgramController extends Controller
     public function programs(){
         $user = Auth::user();
         
-        $programs = Program::all();
+        $programs = Program::orderBy('program','asc')->get();
 
         return view('curriculum',[
             'programs' => $programs,

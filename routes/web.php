@@ -34,7 +34,9 @@ Route::middleware('auth')->group(function(){
     Route::get('/search-student',[StudentController::class,'searchStudent'])->name('search-student');
     Route::get('/searched-students',[StudentController::class,'searchedStudents'])->name('searched-students');
     Route::get('/student-record/{student}',[StudentController::class,'viewStudentRecord'])->name('student-record');
-    Route::get('/student-grades',[StudentController::class,'grades'])->name('grades');
+    Route::get('/search-student-grades',[StudentController::class,'grades'])->name('grades');
+    Route::get('/view-grades/{enrollment}',[StudentController::class,'viewGrades'])->name('view-grades');
+    Route::post('/update-grade/{subjectEnrolled}',[StudentController::class,'updateGrade'])->name('update-grade');
 });
 
 Route::middleware('guest')->group(function(){

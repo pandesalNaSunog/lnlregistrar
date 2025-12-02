@@ -10,6 +10,12 @@
 <body>
     <x-navbar :user="$user"></x-navbar>
     <div class="container py-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('curriculum') }}">Curriculum</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ $program->program }}</li>
+        </ol>
+        </nav>
         <a href="{{ route('add-curriculum-subject',$program) }}"><button class="shadow btn btn-success px-5 mb-3 fixed-button">+ Add Subject</button></a>
         <div class="card shadow">
             <div class="card-header">
@@ -43,7 +49,7 @@
                                                 <td>{{ $subject->lab_units }}</td>
                                                 <td>{{ $subject->lec_units }}</td>
                                                 <td>{{ $firstYearFirstSemesterPrerequisites[$key] }}</td>
-                                                <td><a href="{{ route('add-prerequisite',$subject->id) }}"><button class="btn btn-outline-success">Add Prerequisite</button></a></td>
+                                                <td><a href="{{ route('add-prerequisite',$subject->id) }}"><button class="btn btn-outline-success"><small>Add Prerequisite</small></button></a></td>
                                             </tr>
                                             @endforeach
                                         </tbody>

@@ -4,18 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add Subjects</title>
+    <title>View Grades</title>
     <x-imports></x-imports>
 </head>
 <body>
     <x-navbar :user="$user"></x-navbar>
+
     <div class="container py-5">
         <nav style="--bs-breadcrumb-divider: '>'; color: green; text-decoration: none;" aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{{ route('enrollment') }}">Enrollment</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('enrollment-list',$program->id) }}">{{ $program->program }}</a></li>
-                <li class="breadcrumb-item"><a href="{{ route('add-enrollee', $program->id) }}">Student List</a></li> 
-                <li class="breadcrumb-item active">Enroll</li>
+                <li class="breadcrumb-item"><a href="{{ route('grades') }}">Grades</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{{ $student->last_name . ", " . $student->first_name . " " . $student->middle_name }}</li>
             </ol>
         </nav>
         <div class="row row-cols-1 row-cols-lg-2 g-3">
@@ -67,51 +66,57 @@
             </div>
             <div class="col col-lg-9">
                 <div class="card shadow">
-                    <div class="card-header">
-                        <h5 class="fw-bold">Subjects Enrolled for Academic Year {{ date('Y')."-".date('Y')+1 .", " . $enrollment->semester}}</h5>
-                    </div>
                     <div class="card-body">
                         <div class="table-responsive">
+                            <h4 class="fw-bold">{{ $enrollment->semester . ', ' . $enrollment->academic_year }}</h4>
                             <table class="table table-striped table-hover">
                                 <thead>
-                                    <th scope="col">Course Code</th>
-                                    <th scope="col">Descriptive Title</th>
-                                    <th scope="col">Lec Units</th>
+                                    <th>Course Code</th>
+                                    <th>Descriptive Title</th>
+                                    <th>Lec Units</th>
                                     <th>Lab Units</th>
+                                    <th>Prelim</th>
+                                    <th>Midterm</th>
+                                    <th>Semi-Final</th>
+                                    <th>Final</th>
+                                    <th>Action</th>
                                 </thead>
                                 <tbody>
-                                    @foreach($enrolledSubjects as $subject)
+                                    @foreach($subjects as $subject)
+                                        <form action="{{ route('update-grade', $subject['enrolled_subject']->id) }}" method="post">
+                                        @csrf
                                         <tr>
-
                                             <td>{{ $subject['course_code'] }}</td>
                                             <td>{{ $subject['descriptive_title'] }}</td>
                                             <td>{{ $subject['lec_units'] }}</td>
                                             <td>{{ $subject['lab_units'] }}</td>
+                                            
+
+                                            <td>
+                                                <input type="text" class="form-control" name="prelim" value="{{ $subject['enrolled_subject']->prelim }}">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="midterm" value="{{ $subject['enrolled_subject']->midterm }}">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="semi_final" value="{{ $subject['enrolled_subject']->semi_final }}">
+                                            </td>
+                                            <td>
+                                                <input type="text" class="form-control" name="final" value="{{ $subject['enrolled_subject']->final }}">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-outline-success px-5"><small>Update</small></button>
+                                            </td>
                                         </tr>
+                                    </form>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-
-                <label for="" class="text-secondary mt-3">Select Subjects</label>
-
-                <form action="{{ route('post-add-enrolled-subject',$enrollment->id) }}" method="post">
-                    @csrf
-                    <select name="subject_id" class="form-select @error('subject_id') is-invalid @enderror">
-                        @foreach($subjects as $subject)
-                        <option value="{{ $subject->id }}">{{ $subject->course_code . " ($subject->descriptive_title)" }}</option>
-                        @endforeach
-                    </select>
-                    @error('subject_id')
-                    <x-error-text>{{ $message }}</x-error-text>
-                    @enderror
-                    <button class="mt-3 btn btn-success px-5">Add</button>
-                </form>
             </div>
         </div>
-        
     </div>
 </body>
 </html>

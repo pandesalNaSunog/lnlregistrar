@@ -63,6 +63,11 @@ class EnrollmentController extends Controller
         $enrolledSubjects = SubjectEnrolled::where('enrollment_id',$enrollmentInstance->id)->get();
 
         $subjects = [];
+        $subjectsToRemove = [];
+        $subjectsToEnroll = [];
+        foreach($programSubjects as $subject){
+            $subjectsToEnroll[] = $subject;
+        }
         foreach($enrolledSubjects as $subject){
             $subjectInstance = Subject::where('id', $subject->subject_id)->first();
             $subjects[] = [
@@ -72,18 +77,26 @@ class EnrollmentController extends Controller
                 'lec_units' => $subjectInstance->lec_units,
                 'lab_units' => $subjectInstance->lab_units
             ];
+            $subjectsToRemove[] = $subjectInstance;
         }
+        $subjectsToEnroll = array_diff($subjectsToEnroll,$subjectsToRemove);
         return view('add-subjects',[
             'enrollment' => $enrollmentInstance,
             'program' => $program,
             'user' => Auth::user(),
             'student' => $student,
-            'subjects' => $programSubjects,
+            'subjects' => $subjectsToEnroll,
             'enrolledSubjects' => $subjects
         ]);
     }
 
     public function postAddEnrolledSubject(Request $request, Enrollment $enrollment){
+
+        if($request->subject_id == null){
+            return back()->withErrors([
+                'subject_id' => 'There are no subjects to add' 
+            ]);
+        }
         $hasEnrolledSubject = SubjectEnrolled::where('enrollment_id', $enrollment->id)->where('subject_id',$request->subject_id)->first();
 
         if(!$hasEnrolledSubject){

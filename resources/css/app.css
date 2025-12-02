@@ -1,7 +1,7 @@
 
 body {
   font-family: "Montserrat", sans-serif;
-  font-size:smaller;
+  font-size:12px;
 }
 
 .fixed-button{
@@ -11,3 +11,8 @@ body {
   z-index: 1;
 }
 
+
+select option:hover {
+    background: green;
+    color:white;
+}

@@ -11,6 +11,13 @@
     <x-navbar :user="$user"></x-navbar>
 
     <div class="container py-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('curriculum') }}">Curriculum</a></li>
+            <li class="breadcrumb-item" aria-current="page"><a href="{{ route('manage-curriculum',$program->id) }}">{{ $program->program }}</a></li>
+            <li class="breadcrumb-item active">Add Subject</li>
+        </ol>
+        </nav>
         <div class="card shadow col col-lg-4 mx-auto">
             <div class="card-header">
                 <h5 class="fw-bold">Add Subjects for {{ $program->program }}</h5>
