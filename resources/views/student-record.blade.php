@@ -10,6 +10,12 @@
 <body>
     <x-navbar :user="$user"></x-navbar>
     <div class="container py-5">
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('student-records') }}">Student Records</a></li>
+            <li class="breadcrumb-item active">{{ $student->last_name . ", " . $student->first_name . " " . $student->middle_name }}</li>
+        </ol>
+        </nav>
         <div class="row row-cols-1 row-cols-lg-2 g-3">
             <div class="col col-lg-3">
                 <div class="card shadow">
@@ -54,6 +60,14 @@
                             <label class="text-secondary">Email</label>
                             <p class="fw-bold">{{ $student->email }}</p>
                         </div>
+                        <div class="col">
+                            <label class="text-secondary">Elementary</label>
+                            <p class="fw-bold">{{ $student->elementary }}<em>{{ " (".$student->elem_year_grad.")" }}</em></p>
+                        </div>
+                        <div class="col">
+                            <label class="text-secondary">Secondary</label>
+                            <p class="fw-bold">{{ $student->secondary }}<em>{{ " (".$student->secondary_year_grad.")" }}</em></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,8 +102,29 @@
                         @endforeach
                     </div>
                 </div>
+                <div class="accordion mt-3" id="accordionFlushExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                Subjects to be Accomplished {{ '('.count($subjectsToAccomplish).')' }}
+                            </button>
+                        </h2>
+                        <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body">
+                                <ul>
+                                @foreach($subjectsToAccomplish as $subject)
+                                    <li>
+                                        {{ $subject->course_code }}
+                                    </li>
+                                @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
+
+        
     </div>
 </body>
 </html>

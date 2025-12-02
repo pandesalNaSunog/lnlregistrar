@@ -10,7 +10,12 @@
 <body>
     <x-navbar :user="$user"></x-navbar>
     <div class="container py-5">
-    
+        <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{{ route('student-records') }}">Student Records</a></li>
+            <li class="breadcrumb-item active">Search Results</li>
+        </ol>
+        </nav>
         <div class="card shadow mt-3">
             <div class="card-header">
                 <h5 class="fw-bold">Search Results</h5>

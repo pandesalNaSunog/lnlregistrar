@@ -22,6 +22,10 @@ class Student extends Model
         'contact_number',
         'address',
         'email',
+        'elementary',
+        'elem_year_grad',
+        'secondary',
+        'secondary_year_grad',
         'type'
     ];
 }

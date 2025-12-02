@@ -10,9 +10,15 @@ body {
   bottom: 50px;
   z-index: 1;
 }
-
+.form-control{
+  font-size: 12px;
+}
 
 select option:hover {
     background: green;
     color:white;
+}
+
+.btn{
+  font-size: 13px;
 }

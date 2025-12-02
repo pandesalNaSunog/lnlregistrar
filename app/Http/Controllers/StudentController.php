@@ -94,9 +94,19 @@ class StudentController extends Controller
         $program = Program::where('id', $student->program_id)->first();
         $enrollments = Enrollment::where('student_id', $student->id)->get();
 
+        $curriculumSubjects = Subject::where('program_id',$student->program_id)->get();
+
         $enrolledSubjectData = [];
         $unitsData = [];
         $gradeData = [];
+        $subjectsToAccomplish = [];
+        //transfer curriculum subjects to curriculumSubs array
+        $curriculumSubs = [];
+        foreach($curriculumSubjects as $subject){
+            $curriculumSubs[] = $subject;
+        }
+
+        $subjectsPassed = [];
         foreach($enrollments as $enrollment){
             $subjectsEnrolled = SubjectEnrolled::where('enrollment_id', $enrollment->id)->get();
             $enrolledSubjects = [];
@@ -107,11 +117,21 @@ class StudentController extends Controller
                 $subjectProper = Subject::where('id', $subject->subject_id)->first();
                 $enrolledSubjects[] = $subjectProper;
                 $units[] = $subjectProper->lec_units + $subjectProper->lab_units;
+                foreach($curriculumSubjects as $curriculumSubject){
+                    if($curriculumSubject->id == $subjectProper->id){
+                        //if subject is passed 
+                        if($subject->final != 'IP' && $subject->final !='NG' && $subject->final !='D' && $subject->final !='INC' && $subject->final !='F'){
+                            $subjectsPassed[] = $subjectProper;
+                        }
+                    }
+                }
             }
             $gradeData[] = $grades;
             $enrolledSubjectData[] = $enrolledSubjects;
             $unitsData[] = $units;
         }
+
+        $subjectsToAccomplish = array_diff($curriculumSubs,$subjectsPassed);
         return view('student-record',[
             'user' => Auth::user(),
             'student' => $student,
@@ -119,7 +139,8 @@ class StudentController extends Controller
             'enrollments' => $enrollments,
             'enrolledSubjects' => $enrolledSubjectData,
             'units' => $unitsData,
-            'grades' => $gradeData
+            'grades' => $gradeData,
+            'subjectsToAccomplish' => $subjectsToAccomplish
         ]);
     }
     public function grades(Request $request){

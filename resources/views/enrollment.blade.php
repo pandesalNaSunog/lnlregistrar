@@ -14,7 +14,7 @@
 
             @foreach($programs as $program)
             <a href="{{ route('enrollment-list',$program->id) }}">
-                <button class="btn btn-outline-success px-5 w-100 mt-3">{{ $program->program }}</button>
+                <button class="btn btn-outline-success px-5 w-100 mt-3 fw-bold">{{ $program->program }}</button>
             </a>
             @endforeach
         </div>

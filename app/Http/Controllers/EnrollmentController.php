@@ -65,8 +65,27 @@ class EnrollmentController extends Controller
         $subjects = [];
         $subjectsToRemove = [];
         $subjectsToEnroll = [];
+
+
         foreach($programSubjects as $subject){
             $subjectsToEnroll[] = $subject;
+        }
+
+        //Remove accomplished subjects from subjectsToEnroll array
+        //get all enrollments of the student
+        $enrollments = Enrollment::where('student_id', $student->id)->get();
+        //loop through the array
+        foreach($enrollments as $enrollment){
+            //get enrolled subjects
+            $subjectsEnrolled = SubjectEnrolled::where('enrollment_id', $enrollment->id)->get();
+            //loop through the subjects
+            foreach($subjectsEnrolled as $subjectEnrolled){
+                //if enrolled subject is passed, then add to the subjectstoremove array
+                if($subjectEnrolled->final != 'IP' && $subjectEnrolled->final !='NG' && $subjectEnrolled->final != 'D' && $subjectEnrolled->final != 'F' && $subjectEnrolled->final != 'INC'){
+                    $subjectProper = Subject::where('id', $subjectEnrolled->subject_id)->first();
+                    $subjectsToRemove[] = $subjectProper;
+                }
+            }
         }
         foreach($enrolledSubjects as $subject){
             $subjectInstance = Subject::where('id', $subject->subject_id)->first();
