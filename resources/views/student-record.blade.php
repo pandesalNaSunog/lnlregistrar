@@ -114,13 +114,18 @@
                                 <ul>
                                 @foreach($subjectsToAccomplish as $subject)
                                     <li>
-                                        {{ $subject->course_code }}
+                                        {{ $subject->course_code . ' - ' . $subject->descriptive_title }}
                                     </li>
                                 @endforeach
                                 </ul>
                             </div>
                         </div>
                     </div>
+                    <form action="{{ route('apply-for-graduation', $student->id) }}" method="POST">
+                        @csrf
+                        <input type="hidden" value="{{ count($subjectsToAccomplish) }}" name="to_accomplish">
+                        <button class="btn btn-success px-5 mt-3">Apply for Graduation</button>
+                    </form>
             </div>
         </div>
 

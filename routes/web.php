@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EnrollmentController;
+use App\Http\Controllers\GraduateController;
 use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\SemesterController;
 use App\Http\Controllers\StudentController;
@@ -37,6 +38,8 @@ Route::middleware('auth')->group(function(){
     Route::get('/search-student-grades',[StudentController::class,'grades'])->name('grades');
     Route::get('/view-grades/{enrollment}',[StudentController::class,'viewGrades'])->name('view-grades');
     Route::post('/update-grade/{subjectEnrolled}',[StudentController::class,'updateGrade'])->name('update-grade');
+    Route::get('/list-of-graduates',[GraduateController::class,'listOfGraduates'])->name('list-of-graduates');
+    Route::post('/apply-for-graduation/{student}',[GraduateController::class,'applyForGraduation'])->name('apply-for-graduation');
 });
 
 Route::middleware('guest')->group(function(){

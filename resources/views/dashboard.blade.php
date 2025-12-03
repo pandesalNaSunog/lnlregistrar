@@ -12,14 +12,18 @@
 
     <div class="container py-5">
         <h4 class="fw-bold">Reports</h4>
-        <div class="row row-cols-1 row-cols-lg-2 g-3">
-            <div class="col">
-                <button class="btn btn-outline-success w-100">Enrollment Report</button>
-            </div>
-            <div class="col">
-                <button class="btn btn-outline-success w-100">Promotion Report</button>
-            </div>
-        </div>
+        <hr class="w-100">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Enrollment Report</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Promotion Report</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('list-of-graduates') }}">List of Graduates</a>
+            </li>
+        </ul>
     </div>
 </body>
 </html>

@@ -1,8 +1,16 @@
 <nav class="sticky-top navbar navbar-dark navbar-expand-lg bg-success">
         <div class="container">
             <div class="navbar-brand">
-                <a class="navbar-brand fw-bold" href="#">The LNL Registrar</a>
-                <p class="mb-0 text-light fs-6"><small>Welcome, {{ $user->first_name . " " . $user->last_name}}</small></p>
+                <div class="d-flex">
+                    <div class="col me-3">
+                        <img src="/lnl.png" style="height: 50px; width: 50px" alt="" class="img-fluid">
+                    </div>
+                    <div class="col">
+
+                        <a class="navbar-brand fw-bold" href="#">The LNL Registrar</a>
+                        <p class="mb-0 text-light fs-6"><small>Welcome, {{ $user->first_name . " " . $user->last_name}}</small></p>
+                    </div>
+                </div>
             </div>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

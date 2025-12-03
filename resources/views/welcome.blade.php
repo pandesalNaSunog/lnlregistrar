@@ -11,7 +11,8 @@
 <body class="bg-light">
     <div class="container py-5">
         <div class="text-center">
-            <h1 class="fw-bold">The <span class="text-success">LNL</span> Registrar</h1>
+            <img src="/lnl.png" style="height: 150px; width: 150px;"alt="" class="img-fluid">
+            <h1 class="fw-bold mt-2">The <span class="text-success">LNL</span> Registrar</h1>
         </div>
 
         <div class="col col-lg-4 mx-auto">
