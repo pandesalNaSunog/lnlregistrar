@@ -26,6 +26,7 @@ class Student extends Model
         'elem_year_grad',
         'secondary',
         'secondary_year_grad',
-        'type'
+        'type',
+        'year_level'
     ];
 }

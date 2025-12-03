@@ -128,30 +128,31 @@ class EnrollmentController extends Controller
             $program = Program::where('id', $student->program_id)->first();
             $coursesEnrolled[] = [
                 'program_id' => $program->id,
-                'gender' => $student->gender
+                'gender' => $student->gender,
+                'year_level' => $student->year_level
             ];
         }
 
         $enrollmentSummary = [];
         foreach($programs as $program){
-            $males = 0;
-            $females = 0;
+            $male = 0;
+            $female = 0;
             foreach($coursesEnrolled as $enrolled){
                 if($program->id == $enrolled['program_id']){
                     if($enrolled['gender'] == 'Male'){
-                        $males++;
+                        $male++;
                     }else{
-                        $females++;
+                        $female++;
                     }
+
                 }
             }
             $enrollmentSummary[] = [
                 'program' => $program->program,
-                'males' => $males,
-                'females' => $females
+                'males' => $male,
+                'females' => $female
             ];
-        }
-
+        }   
         $academicYears = AcademicYear::orderBy('academic_year')->get();
         return view('enrollment-summary',[
             'user' => Auth::user(),

@@ -20,6 +20,7 @@ class StudentController extends Controller
             'first_name' => 'required'
         ]);
 
+
         Student::create($request->all());
 
         return redirect(route('add-enrollee',$request->program_id));

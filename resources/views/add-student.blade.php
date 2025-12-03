@@ -28,6 +28,7 @@
             <div class="card-body">
                 <div class="form-floating">
                     <div class="row row-cols-1 row-cols-lg-3 g-3">
+                        <input type="hidden" name="year_level" value="1">
                         <div class="col">
                             <div class="form-floating">
                                 <input type="text" name="last_name" placeholder="a" class="form-control @error('last_name') is-invalid @enderror">
