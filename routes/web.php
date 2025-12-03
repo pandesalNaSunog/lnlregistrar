@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function(){
     Route::post('/update-grade/{subjectEnrolled}',[StudentController::class,'updateGrade'])->name('update-grade');
     Route::get('/list-of-graduates',[GraduateController::class,'listOfGraduates'])->name('list-of-graduates');
     Route::post('/apply-for-graduation/{student}',[GraduateController::class,'applyForGraduation'])->name('apply-for-graduation');
+    Route::get('/enrollment-summary',[EnrollmentController::class,'enrollmentSummary'])->name('enrollment-summary');
 });
 
 Route::middleware('guest')->group(function(){

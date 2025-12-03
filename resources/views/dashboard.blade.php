@@ -23,6 +23,9 @@
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('list-of-graduates') }}">List of Graduates</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('enrollment-summary') }}">Enrollment Summary</a>
+            </li>
         </ul>
     </div>
 </body>

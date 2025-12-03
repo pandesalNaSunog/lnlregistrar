@@ -22,6 +22,9 @@
             <li class="nav-item">
                 <a class="nav-link active" href="#">List of Graduates</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('enrollment-summary') }}">Enrollment Summary</a>
+            </li>
         </ul>
         <div class="card shadow mt-3">
             <div class="card-header">

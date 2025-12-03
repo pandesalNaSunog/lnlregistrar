@@ -10,9 +10,10 @@ body {
   bottom: 50px;
   z-index: 1;
 }
-.form-control{
+.form-control,.form-select,.accordion{
   font-size: 12px;
 }
+
 
 select option:hover {
     background: green;

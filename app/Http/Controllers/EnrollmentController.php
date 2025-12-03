@@ -108,6 +108,60 @@ class EnrollmentController extends Controller
             'enrolledSubjects' => $subjects
         ]);
     }
+    public function enrollmentSummary(Request $request){
+        if($request->all() == null){
+            $academicYear = date('Y').'-'.date('Y')+1;
+            $semester = Semester::first()->semester;
+        }else{
+            $academicYear = $request->academic_year;
+            $semester = $request->semester;
+        }
+
+        $enrollments = Enrollment::where('academic_year',$academicYear)->where('semester',$semester)->get();
+        $programs = Program::orderBy('program','asc')->get();
+
+        $coursesEnrolled = [];
+
+
+        foreach($enrollments as $enrollment){
+            $student = Student::where('id', $enrollment->student_id)->first();
+            $program = Program::where('id', $student->program_id)->first();
+            $coursesEnrolled[] = [
+                'program_id' => $program->id,
+                'gender' => $student->gender
+            ];
+        }
+
+        $enrollmentSummary = [];
+        foreach($programs as $program){
+            $males = 0;
+            $females = 0;
+            foreach($coursesEnrolled as $enrolled){
+                if($program->id == $enrolled['program_id']){
+                    if($enrolled['gender'] == 'Male'){
+                        $males++;
+                    }else{
+                        $females++;
+                    }
+                }
+            }
+            $enrollmentSummary[] = [
+                'program' => $program->program,
+                'males' => $males,
+                'females' => $females
+            ];
+        }
+
+        $academicYears = AcademicYear::orderBy('academic_year')->get();
+        return view('enrollment-summary',[
+            'user' => Auth::user(),
+            'enrollmentSummary' => $enrollmentSummary,
+            'academicYear' => $academicYear,
+            'semester' => $semester,
+            'academicYears' => $academicYears
+        ]);
+
+    }
 
     public function postAddEnrolledSubject(Request $request, Enrollment $enrollment){
 
