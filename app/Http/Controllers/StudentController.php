@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AcademicYear;
+use App\Models\Shift;
 use App\Models\Program;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Semester;
 use App\Models\Enrollment;
+use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use App\Models\SubjectEnrolled;
 use Illuminate\Support\Facades\Auth;
@@ -73,7 +74,9 @@ class StudentController extends Controller
             'semi_final' => $request->semi_final,
             'final' => $request->final
         ]);
-        return back();
+        return back()->with([
+            'message' => 'Grade successfully encoded.'
+        ]);
     }
     public function searchStudent(Request $request){
         $user = Auth::user();
@@ -92,56 +95,71 @@ class StudentController extends Controller
         ]);
     }
     public function viewStudentRecord(Student $student){
-        $program = Program::where('id', $student->program_id)->first();
         $enrollments = Enrollment::where('student_id', $student->id)->get();
-
-        $curriculumSubjects = Subject::where('program_id',$student->program_id)->get();
-
-        $enrolledSubjectData = [];
-        $unitsData = [];
-        $gradeData = [];
-        $subjectsToAccomplish = [];
-        //transfer curriculum subjects to curriculumSubs array
-        $curriculumSubs = [];
-        foreach($curriculumSubjects as $subject){
-            $curriculumSubs[] = $subject;
+        $studentRecord = [];
+        $currentProgram = Program::where('id', $student->program_id)->first();
+        $shiftPrograms = Program::where('id','<>',$student->program_id)->orderBy('program','asc')->get();
+        $currentProgramSubjects = Subject::where('program_id', $currentProgram->id)->get();
+        $currentSubjects = [];
+        foreach($currentProgramSubjects as $programSubject){
+            $currentSubjects[] = $programSubject->course_code;
         }
-
-        $subjectsPassed = [];
+        $accomplishedSubjects = [];
         foreach($enrollments as $enrollment){
-            $subjectsEnrolled = SubjectEnrolled::where('enrollment_id', $enrollment->id)->get();
-            $enrolledSubjects = [];
-            $units = [];
-            $grades = [];
-            foreach($subjectsEnrolled as $subject){
-                $grades[] = $subject->final;
+            $academicYear = $enrollment->academic_year;
+            $semester = $enrollment->semester;
+            $program = Program::where('id', $enrollment->program_id)->first();
+            $enrolledSubjects = SubjectEnrolled::where('enrollment_id', $enrollment->id)->get();
+
+            $subjectsEnrolled = [];
+
+            foreach($enrolledSubjects as $subject){
                 $subjectProper = Subject::where('id', $subject->subject_id)->first();
-                $enrolledSubjects[] = $subjectProper;
-                $units[] = $subjectProper->lec_units + $subjectProper->lab_units;
-                foreach($curriculumSubjects as $curriculumSubject){
-                    if($curriculumSubject->id == $subjectProper->id){
-                        //if subject is passed 
-                        if($subject->final != 'IP' && $subject->final !='NG' && $subject->final !='D' && $subject->final !='INC' && $subject->final !='F'){
-                            $subjectsPassed[] = $subjectProper;
-                        }
+                $units = $subjectProper->lec_units + $subjectProper->lab_units;
+                $subjectsEnrolled[] = [
+                    'course_code' => $subjectProper->course_code,
+                    'descriptive_title' => $subjectProper->descriptive_title,
+                    'units' => $units,
+                    'grade' => $subject->final
+                ];
+                foreach($currentProgramSubjects as $currentProgramSubject){
+                    $ifPassed = $subject->final != 'IP' && $subject->final != 'NG' && $subject->final != 'D' && $subject->final != 'F' && $subject->final != 'INC';
+                    if($currentProgramSubject->course_code == $subjectProper->course_code && $ifPassed){
+                        $accomplishedSubjects[] = $subjectProper->course_code;
                     }
                 }
             }
-            $gradeData[] = $grades;
-            $enrolledSubjectData[] = $enrolledSubjects;
-            $unitsData[] = $units;
+    
+            $studentRecord[] = [
+                'academic_year' => $academicYear,
+                'semester' => $semester,
+                'program' => $program->program,
+                'enrolled_subjects' => $subjectsEnrolled
+            ];
         }
-
-        $subjectsToAccomplish = array_diff($curriculumSubs,$subjectsPassed);
+        $activeSemester = Semester::first();
+        $toBeAccomplishedSubjects = array_diff($currentSubjects, $accomplishedSubjects);
         return view('student-record',[
             'user' => Auth::user(),
+            'studentRecord' => $studentRecord,
             'student' => $student,
-            'program' => $program,
-            'enrollments' => $enrollments,
-            'enrolledSubjects' => $enrolledSubjectData,
-            'units' => $unitsData,
-            'grades' => $gradeData,
-            'subjectsToAccomplish' => $subjectsToAccomplish
+            'program' => $currentProgram,
+            'shiftPrograms' => $shiftPrograms,
+            'activeSemester' => $activeSemester,
+            'toBeAccomplishedSubjects' => $toBeAccomplishedSubjects
+        ]);
+        
+    }
+    public function shiftProgram(Student $student, Request $request){
+        $student->update([
+            'program_id' => $request->program_id
+        ]);
+        Shift::create([
+            'student_id' => $student->id,
+            'program_id' => $request->program_id
+        ]);
+        return back()->with([
+            'message' => 'Student course has been shifted.'
         ]);
     }
     public function grades(Request $request){

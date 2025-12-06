@@ -2,72 +2,122 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Shift;
 use App\Models\Program;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Semester;
 use App\Models\Enrollment;
 use App\Models\AcademicYear;
-use App\Models\SubjectEnrolled;
 use Illuminate\Http\Request;
+use App\Models\SubjectEnrolled;
 use Illuminate\Support\Facades\Auth;
 
 class EnrollmentController extends Controller
 {
-    public function enrollmentList(Program $program){
+    public function enrollmentList(Request $request, Program $program)
+    {
         $user = Auth::user();
         $academicYears = AcademicYear::all();
-        return view('enrollment-list-per-program',[
+        $firstName = "";
+        $lastName = "";
+        $middleName = "";
+        if ($request->all() == null) {
+            $semester = Semester::first()->semester;
+            $academicYear = date('Y') . '-' . date('Y') + 1;
+
+        } else {
+            $semester = $request->semester;
+            $academicYear = $request->academic_year;
+            $firstName = $request->first_name;
+            $lastName = $request->last_name;
+            $middleName = $request->middle_name;
+        }
+
+        $studentList = [];
+
+        $enrollments = Enrollment::where('academic_year', $academicYear)->where('semester', $semester)->where('program_id', $program->id)->get();
+
+        foreach($enrollments as $enrollment){
+            $student = Student::where('id', $enrollment->student_id)->first();
+            if($request->all() != null){
+                if(strpos($student->last_name, $lastName) !== false && strpos($student->first_name, $firstName) !== false && strpos($student->middle_name, $middleName) !== false){
+                    $studentList[] = $student;
+                }
+            }else{
+                $studentList[] = $student;
+            }
+        }
+
+        return view('enrollment-list-per-program', [
             'user' => $user,
             'program' => $program,
-            'academicYears' => $academicYears
+            'academicYears' => $academicYears,
+            'studentList' => $studentList
         ]);
     }
-    public function enrollmentView(){
+    public function enrollmentView()
+    {
         $currentAcademicYear = date('Y') . "-" . (date('Y') + 1);
-        $programs = Program::orderBy('program','asc')->get();
+        $programs = Program::orderBy('program', 'asc')->get();
         $user = Auth::user();
-        return view('enrollment',[
+        return view('enrollment', [
             'user' => $user,
             'currentAcademicYear' => $currentAcademicYear,
             'programs' => $programs
         ]);
     }
 
-    public function addEnrolleeView(Program $program){
+    public function addEnrolleeView(Program $program)
+    {
         $user = Auth::user();
         $students = Student::where('program_id', $program->id)->orderBy('last_name', 'asc')->get();
-        return view('add-enrollee',[
+        return view('add-enrollee', [
             'user' => $user,
             'students' => $students,
             'program' => $program
         ]);
     }
-    public function addSubjects(Student $student){
-        $academicYear = date('Y'). '-' . date('Y') + 1;
+    public function addSubjects(Student $student)
+    {
+        $academicYear = date('Y') . '-' . date('Y') + 1;
         $semester = Semester::first();
 
         $hasActiveEnrollment = Enrollment::where('academic_year', $academicYear)->where('semester', $semester->semester)->where('student_id', $student->id)->first();
 
-        if(!$hasActiveEnrollment){
+
+        //set enrollment instance to view enrolled subjects for the current semester
+        if (!$hasActiveEnrollment) {
             $enrollmentInstance = Enrollment::create([
                 'academic_year' => $academicYear,
                 'semester' => $semester->semester,
+                'program_id' => $student->program_id,
                 'student_id' => $student->id
             ]);
-        }else{
+        } else {
             $enrollmentInstance = $hasActiveEnrollment;
         }
+
+
+        //create shift attempts if there is none
+        $hasNewShift = Shift::where('student_id', $student->id)->where('program_id', $student->program_id)->first();
+        if (!$hasNewShift) {
+            Shift::create([
+                'program_id' => $student->program_id,
+                'student_id' => $student->id
+            ]);
+        }
+
         $program = Program::where('id', $student->program_id)->first();
-        $programSubjects = Subject::where('program_id', $program->id)->orderBy('course_code','asc')->get();
-        $enrolledSubjects = SubjectEnrolled::where('enrollment_id',$enrollmentInstance->id)->get();
+        $programSubjects = Subject::where('program_id', $program->id)->orderBy('course_code', 'asc')->get();
+        $enrolledSubjects = SubjectEnrolled::where('enrollment_id', $enrollmentInstance->id)->get();
 
         $subjects = [];
         $subjectsToRemove = [];
         $subjectsToEnroll = [];
 
 
-        foreach($programSubjects as $subject){
+        foreach ($programSubjects as $subject) {
             $subjectsToEnroll[] = $subject;
         }
 
@@ -75,19 +125,19 @@ class EnrollmentController extends Controller
         //get all enrollments of the student
         $enrollments = Enrollment::where('student_id', $student->id)->get();
         //loop through the array
-        foreach($enrollments as $enrollment){
+        foreach ($enrollments as $enrollment) {
             //get enrolled subjects
             $subjectsEnrolled = SubjectEnrolled::where('enrollment_id', $enrollment->id)->get();
             //loop through the subjects
-            foreach($subjectsEnrolled as $subjectEnrolled){
+            foreach ($subjectsEnrolled as $subjectEnrolled) {
                 //if enrolled subject is passed, then add to the subjectstoremove array
-                if($subjectEnrolled->final != 'IP' && $subjectEnrolled->final !='NG' && $subjectEnrolled->final != 'D' && $subjectEnrolled->final != 'F' && $subjectEnrolled->final != 'INC'){
+                if ($subjectEnrolled->final != 'IP' && $subjectEnrolled->final != 'NG' && $subjectEnrolled->final != 'D' && $subjectEnrolled->final != 'F' && $subjectEnrolled->final != 'INC') {
                     $subjectProper = Subject::where('id', $subjectEnrolled->subject_id)->first();
                     $subjectsToRemove[] = $subjectProper;
                 }
             }
         }
-        foreach($enrolledSubjects as $subject){
+        foreach ($enrolledSubjects as $subject) {
             $subjectInstance = Subject::where('id', $subject->subject_id)->first();
             $subjects[] = [
                 'id' => $subject->id,
@@ -98,8 +148,8 @@ class EnrollmentController extends Controller
             ];
             $subjectsToRemove[] = $subjectInstance;
         }
-        $subjectsToEnroll = array_diff($subjectsToEnroll,$subjectsToRemove);
-        return view('add-subjects',[
+        $subjectsToEnroll = array_diff($subjectsToEnroll, $subjectsToRemove);
+        return view('add-subjects', [
             'enrollment' => $enrollmentInstance,
             'program' => $program,
             'user' => Auth::user(),
@@ -108,22 +158,23 @@ class EnrollmentController extends Controller
             'enrolledSubjects' => $subjects
         ]);
     }
-    public function enrollmentSummary(Request $request){
-        if($request->all() == null){
-            $academicYear = date('Y').'-'.date('Y')+1;
+    public function enrollmentSummary(Request $request)
+    {
+        if ($request->all() == null) {
+            $academicYear = date('Y') . '-' . date('Y') + 1;
             $semester = Semester::first()->semester;
-        }else{
+        } else {
             $academicYear = $request->academic_year;
             $semester = $request->semester;
         }
 
-        $enrollments = Enrollment::where('academic_year',$academicYear)->where('semester',$semester)->get();
-        $programs = Program::orderBy('program','asc')->get();
+        $enrollments = Enrollment::where('academic_year', $academicYear)->where('semester', $semester)->get();
+        $programs = Program::orderBy('program', 'asc')->get();
 
         $coursesEnrolled = [];
 
 
-        foreach($enrollments as $enrollment){
+        foreach ($enrollments as $enrollment) {
             $student = Student::where('id', $enrollment->student_id)->first();
             $program = Program::where('id', $student->program_id)->first();
             $coursesEnrolled[] = [
@@ -134,14 +185,14 @@ class EnrollmentController extends Controller
         }
 
         $enrollmentSummary = [];
-        foreach($programs as $program){
+        foreach ($programs as $program) {
             $male = 0;
             $female = 0;
-            foreach($coursesEnrolled as $enrolled){
-                if($program->id == $enrolled['program_id']){
-                    if($enrolled['gender'] == 'Male'){
+            foreach ($coursesEnrolled as $enrolled) {
+                if ($program->id == $enrolled['program_id']) {
+                    if ($enrolled['gender'] == 'Male') {
                         $male++;
-                    }else{
+                    } else {
                         $female++;
                     }
 
@@ -152,9 +203,9 @@ class EnrollmentController extends Controller
                 'males' => $male,
                 'females' => $female
             ];
-        }   
+        }
         $academicYears = AcademicYear::orderBy('academic_year')->get();
-        return view('enrollment-summary',[
+        return view('enrollment-summary', [
             'user' => Auth::user(),
             'enrollmentSummary' => $enrollmentSummary,
             'academicYear' => $academicYear,
@@ -164,16 +215,17 @@ class EnrollmentController extends Controller
 
     }
 
-    public function postAddEnrolledSubject(Request $request, Enrollment $enrollment){
+    public function postAddEnrolledSubject(Request $request, Enrollment $enrollment)
+    {
 
-        if($request->subject_id == null){
+        if ($request->subject_id == null) {
             return back()->withErrors([
-                'subject_id' => 'There are no subjects to add' 
+                'subject_id' => 'There are no subjects to add'
             ]);
         }
-        $hasEnrolledSubject = SubjectEnrolled::where('enrollment_id', $enrollment->id)->where('subject_id',$request->subject_id)->first();
+        $hasEnrolledSubject = SubjectEnrolled::where('enrollment_id', $enrollment->id)->where('subject_id', $request->subject_id)->first();
 
-        if(!$hasEnrolledSubject){
+        if (!$hasEnrolledSubject) {
             SubjectEnrolled::create([
                 'enrollment_id' => $enrollment->id,
                 'subject_id' => $request->subject_id,
