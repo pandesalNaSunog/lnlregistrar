@@ -41,10 +41,16 @@
                             </div>
                             <label class="mt-3" for=""><small class="text-secondary">Academic
                                     Year</small></label>
-                            <select name="academic-year" class="form-select">
+                            <select name="academic_year" class="form-select">
                                 @foreach ($academicYears as $academicYear)
-                                    <option value="{{ $academicYear->id }}">{{ $academicYear->academic_year }}</option>
+                                    <option value="{{ $academicYear->academic_year }}">{{ $academicYear->academic_year }}</option>
                                 @endforeach
+                            </select>
+                            <label class="mt-3" for=""><small class="text-secondary">Semester</small></label>
+                            <select name="semester" class="form-select">
+                                <option value="First Semester">First Semester</option>
+                                <option value="Second Semester">Second Semester</option>
+                                <option value="Summer">Summer</option>
                             </select>
                             <button class="btn btn-outline-success mt-3 w-100">Load</button>
                         </form>

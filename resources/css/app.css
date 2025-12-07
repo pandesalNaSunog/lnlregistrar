@@ -14,7 +14,13 @@ body {
   font-size: 12px;
 }
 
-
+.active>.page-link{
+  background-color: green;
+  border-color: green;
+}
+.page-link{
+  color:green
+}
 select option:hover {
     background: green;
     color:white;

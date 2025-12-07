@@ -22,8 +22,14 @@ class StudentController extends Controller
         ]);
 
 
-        Student::create($request->all());
-
+        $student = Student::create($request->all());
+        $sem = Semester::first();
+        Enrollment::create([
+            'student_id' => $student->id,
+            'academic_year' => date('Y').'-'.date('Y')+1,
+            'semester' => $sem->semester,
+            'program_id' => $student->program_id
+        ]);
         return redirect(route('add-enrollee',$request->program_id));
 
 
@@ -163,18 +169,19 @@ class StudentController extends Controller
         ]);
     }
     public function grades(Request $request){
-        if($request->all() != null){
 
-            $students = Student::where('last_name','like','%'.$request->last_name.'%')->where('first_name','like','%'.$request->first_name.'%')->where('middle_name','like','%'.$request->middle_name.'%')->orderBy('last_name','asc')->get();
+        if($request->has(['last_name']) || $request->has(['first_name']) || $request->has(['first_name'])){
+
+            $students = Student::where('last_name','like','%'.$request->last_name.'%')->where('first_name','like','%'.$request->first_name.'%')->where('middle_name','like','%'.$request->middle_name.'%')->orderBy('last_name','asc')->paginate(1)->withQueryString();
         }else{
-            $students = Student::orderBy('last_name','asc')->get();
+            $students = Student::orderBy('last_name','asc')->paginate(1)->withQueryString();
         }
         $academicYears = AcademicYear::orderBy('academic_year','desc')->get();
 
         $courses = [];
         $studentsEnrolled = [];
         foreach($students as $student){
-            if($request->all() != null){
+            if($request->has(['last_name','first_name','middle_name'])){
 
                 $isEnrolled = Enrollment::where('academic_year',$request->academic_year)->where('semester',$request->semester)->where('student_id', $student->id)->first();
             }else{
@@ -198,6 +205,7 @@ class StudentController extends Controller
             'academicYears' => $academicYears,
             'activeSemester' => $sem,
             'students' => $studentsEnrolled,
+            'studentPagination' => $students,
             'courses' => $courses
         ]);
     }

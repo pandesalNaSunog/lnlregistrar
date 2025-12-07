@@ -33,15 +33,14 @@ class EnrollmentController extends Controller
             $lastName = $request->last_name;
             $middleName = $request->middle_name;
         }
-
         $studentList = [];
 
         $enrollments = Enrollment::where('academic_year', $academicYear)->where('semester', $semester)->where('program_id', $program->id)->get();
-
         foreach($enrollments as $enrollment){
             $student = Student::where('id', $enrollment->student_id)->first();
             if($request->all() != null){
-                if(strpos($student->last_name, $lastName) !== false && strpos($student->first_name, $firstName) !== false && strpos($student->middle_name, $middleName) !== false){
+                $cond = stripos($student->last_name, $lastName) !== false && stripos($student->first_name, $firstName) !== false;
+                if($cond){
                     $studentList[] = $student;
                 }
             }else{
@@ -168,43 +167,56 @@ class EnrollmentController extends Controller
             $semester = $request->semester;
         }
 
-        $enrollments = Enrollment::where('academic_year', $academicYear)->where('semester', $semester)->get();
-        $programs = Program::orderBy('program', 'asc')->get();
-
-        $coursesEnrolled = [];
-
-
-        foreach ($enrollments as $enrollment) {
-            $student = Student::where('id', $enrollment->student_id)->first();
-            $program = Program::where('id', $student->program_id)->first();
-            $coursesEnrolled[] = [
-                'program_id' => $program->id,
-                'gender' => $student->gender,
-                'year_level' => $student->year_level
-            ];
-        }
 
         $enrollmentSummary = [];
-        foreach ($programs as $program) {
-            $male = 0;
-            $female = 0;
-            foreach ($coursesEnrolled as $enrolled) {
-                if ($program->id == $enrolled['program_id']) {
-                    if ($enrolled['gender'] == 'Male') {
-                        $male++;
-                    } else {
-                        $female++;
-                    }
+        $programs = Program::orderBy('program','asc')->get();
+        foreach($programs as $program){
+            $firstMales = 0;
+            $firstFemales = 0;
+            $secondMales = 0;
+            $secondFemales = 0;
+            $thirdMales = 0;
+            $thirdFemales = 0;
+            $fourthMales = 0;
+            $fourthFemales = 0;
 
+
+            $enrollments = Enrollment::where('program_id', $program->id)->where('academic_year', $academicYear)->where('semester', $semester)->get();
+            foreach($enrollments as $enrollment){
+                $student = Student::where('id', $enrollment->student_id)->first();
+                if($student->gender == 'Male' && $student->year_level == 1){
+                    $firstMales++;
+                }else if($student->gender == 'Female' && $student->year_level == 1){
+                    $firstFemales++;
+                }else if($student->gender == 'Male' && $student->year_level == 2){
+                    $secondMales++;
+                }else if($student->gender == 'Female' && $student->year_level == 2){
+                    $secondFemales++;
+                }else if($student->gender == 'Male' && $student->year_level == 3){
+                    $thirdMales++;
+                }else if($student->gender == 'Female' && $student->year_level == 3){
+                    $thirdFemales++;
+                }else if($student->gender == 'Male' && $student->year_level == 4){
+                    $fourthMales++;
+                }else if($student->gender == 'Female' && $student->year_level == 4){
+                    $fourthFemales++;
                 }
             }
             $enrollmentSummary[] = [
                 'program' => $program->program,
-                'males' => $male,
-                'females' => $female
+                'firstMales' => $firstMales,
+                'secondMales' => $secondMales,
+                'thirdMales' => $thirdMales,
+                'fourthMales' => $fourthMales,
+                'firstFemales' => $firstFemales,
+                'secondFemales' => $secondFemales,
+                'thirdFemales' => $thirdFemales,
+                'fourthFemales' => $fourthFemales
             ];
         }
         $academicYears = AcademicYear::orderBy('academic_year')->get();
+
+
         return view('enrollment-summary', [
             'user' => Auth::user(),
             'enrollmentSummary' => $enrollmentSummary,

@@ -86,6 +86,11 @@
                 </div>
             </div>
         </div>
+
+        <div class="mt-3">
+
+            {{ $studentPagination->links() }}
+        </div>
     </div>
 </body>
 </html>

@@ -37,6 +37,29 @@
                                 class="btn btn-outline-success w-100">Shift</button>
                         </div>
                         <div class="col mt-3">
+                            <label for="" class="text-secondary">Year Level</label>
+                            <p class="fw-bold">
+                                @php
+                                    switch($student->year_level){
+                                        case '1':
+                                            echo 'First Year';
+                                            break;
+                                        case '2':
+                                            echo 'Second Year';
+                                            break;
+                                        case '3':
+                                            echo 'Third Year';
+                                            break;
+                                        case '4':
+                                            echo 'Fourth Year';
+                                            break;
+                                    }
+
+                                    
+                                @endphp
+                            </p>
+                        </div>
+                        <div class="col mt-3">
                             <label class="text-secondary">Civil Status</label>
                             <p class="fw-bold">{{ $student->civil_status }}</p>
                         </div>

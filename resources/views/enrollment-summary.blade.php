@@ -59,15 +59,27 @@
                             <table class="table table-striped table-hover">
                                 <thead>
                                     <th>Program</th>
-                                    <th>Male</th>
-                                    <th>Female</th>
+                                    <th>First Year Male</th>
+                                    <th>First Year Female</th>
+                                    <th>Second Year Male</th>
+                                    <th>Second Year Female</th>
+                                    <th>Third Year Male</th>
+                                    <th>Third Year Female</th>
+                                    <th>Fourth Year Male</th>
+                                    <th>Fourth Year Female</th>
                                 </thead>
                                 <tbody>
                                     @foreach($enrollmentSummary as $summary)
                                     <tr>
                                         <td>{{ $summary['program'] }}</td>
-                                        <td>{{ $summary['males'] }}</td>
-                                        <td>{{ $summary['females'] }}</td>
+                                        <td>{{ $summary['firstMales'] }}</td>
+                                        <td>{{ $summary['firstFemales'] }}</td>
+                                        <td>{{ $summary['secondMales'] }}</td>
+                                        <td>{{ $summary['secondFemales'] }}</td>
+                                        <td>{{ $summary['thirdMales'] }}</td>
+                                        <td>{{ $summary['thirdFemales'] }}</td>
+                                        <td>{{ $summary['fourthMales'] }}</td>
+                                        <td>{{ $summary['fourthFemales'] }}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
