@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Preqrequisite;
 use App\Models\Program;
 use App\Models\Subject;
 use Illuminate\Http\Request;
+use App\Models\Preqrequisite;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Database\Query\Builder;
 
 class ProgramController extends Controller
 {
@@ -23,8 +24,9 @@ class ProgramController extends Controller
             Preqrequisite::where('subject_id', $subject->id)->delete();
             
         }else if($request->prerequisite_id == "Third Year Standing"){
-            $prerequisites = Subject::where('year','First Year')->orWhere('year','Second Year')->where('program_id',$subject->program_id)->get();
-
+            $prerequisites = Subject::where(function(Builder $query){
+                $query->where('year','First Year')->orWhere('year','Second Year');
+            })->where('program_id',$subject->program_id)->get();
             createPrerequisites($prerequisites, $subject);
         }else if($request->prerequisite_id == "Fourth Year Standing"){
             $prerequisites = Subject::where('year','First Year')->orWhere('year','Second Year')->orWhere('year','Third Year')->where('program_id',$subject->program_id)->get();
@@ -45,7 +47,7 @@ class ProgramController extends Controller
     public function addPrerequisiteView(Subject $subject){
 
         $chosenSubject = $subject;
-        $allSubjects = Subject::where('program_id', $subject->program_id)->orderBy('course_code','asc')->get();
+        $allSubjects = Subject::where('program_id', $subject->program_id)->where('id','<>',$chosenSubject->id)->orderBy('course_code','asc')->get();
         $prerequisites = Preqrequisite::where('subject_id', $subject->id)->get();
         $subjects = [];
         foreach($prerequisites as $prerequisite){
@@ -55,8 +57,10 @@ class ProgramController extends Controller
                 'descriptive_title' => $subject->descriptive_title
             ];
         }
+        $program = Program::where('id', $subject->program_id)->first();
 
         return view('add-preqrequisite',[
+            'program' => $program,
             'programId' => $subject->program_id,
             'allSubjects' => $allSubjects,
             'prerequisites' => $subjects,

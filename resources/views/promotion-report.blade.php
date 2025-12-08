@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <x-imports></x-imports>
-    <title>Dashboard</title>
+    <title>Promotion Report</title>
 </head>
 <body>
     <x-navbar :user="$user"></x-navbar> 
@@ -15,10 +15,10 @@
         <hr class="w-100">
         <ul class="nav nav-tabs">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Enrollment Report</a>
+                <a class="nav-link" aria-current="page" href="{{ route('dashboard') }}">Enrollment Report</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('promotion-report') }}">Promotion Report</a>
+                <a class="nav-link active" href="#">Promotion Report</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('list-of-graduates') }}">List of Graduates</a>
@@ -28,7 +28,7 @@
             </li>
         </ul>
 
-        @foreach($enrollmentReport as $report)
+        @foreach($promotionReport as $report)
         <div class="card shadow mt-3">
             <div class="card-header">
                 <h5 class="fw-bold"><small>{{ $report['program'] .' Year Level: ' . $report['year_level'] }}</small></h5>
@@ -55,7 +55,7 @@
                                 <td>{{ strtoupper($student['student']->gender) }}</td>
                                 @foreach($student['enrolledSubjects'] as $subject)
                                 <td>{{ $subject['course_code'] }}</td>
-                                <td>{{ $subject['units'] }}</td>
+                                <td>{{ $subject['grade'] }}</td>
                                 @endforeach
                             </tr>
                             @endforeach

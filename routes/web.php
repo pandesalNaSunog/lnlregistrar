@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function(){
     Route::post('/apply-for-graduation/{student}',[GraduateController::class,'applyForGraduation'])->name('apply-for-graduation');
     Route::get('/enrollment-summary',[EnrollmentController::class,'enrollmentSummary'])->name('enrollment-summary');
     Route::post('/shift-program/{student}',[StudentController::class,'shiftProgram'])->name('shift-program');
+    Route::get('/promotion-report',[AuthController::class,'promotionReport'])->name('promotion-report');
 });
 
 Route::middleware('guest')->group(function(){
