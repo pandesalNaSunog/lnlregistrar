@@ -43,6 +43,10 @@ Route::middleware('auth')->group(function(){
     Route::get('/enrollment-summary',[EnrollmentController::class,'enrollmentSummary'])->name('enrollment-summary');
     Route::post('/shift-program/{student}',[StudentController::class,'shiftProgram'])->name('shift-program');
     Route::get('/promotion-report',[AuthController::class,'promotionReport'])->name('promotion-report');
+    Route::get('/first-generation-students',[StudentController::class,'firstGenerationStudents'])->name('first-generation-students');
+    Route::get('/ip-students',[StudentController::class,'ipStudents'])->name('ip-students');
+    Route::get('/solo-parent',[StudentController::class, 'soloParent'])->name('solo-parent');
+    Route::get('/pwd-students',[StudentController::class,'pwdStudents'])->name('pwd-students');
 });
 
 Route::middleware('guest')->group(function(){

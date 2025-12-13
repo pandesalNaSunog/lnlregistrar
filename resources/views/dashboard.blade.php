@@ -21,6 +21,18 @@
                 <a class="nav-link" href="{{ route('promotion-report') }}">Promotion Report</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link" href="{{ route('first-generation-students') }}">List of First Generation Students</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('ip-students') }}">List of Indigenous People Students</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('solo-parent') }}">List of Solo Parents and Students with Solo Parent</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ route('pwd-students') }}">List of PWD Students and Students with PWD Parent</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('list-of-graduates') }}">List of Graduates</a>
             </li>
             <li class="nav-item">

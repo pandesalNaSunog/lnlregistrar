@@ -29,3 +29,9 @@ select option:hover {
 .btn{
   font-size: 13px;
 }
+
+
+.form-check-input:checked {
+  background-color: green; /* your color */
+  border-color: green;
+}

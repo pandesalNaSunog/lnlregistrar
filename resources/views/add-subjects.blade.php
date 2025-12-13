@@ -40,7 +40,7 @@
                         </div>
                         <div class="col">
                             <label class="text-secondary">Date of Birth</label>
-                            <p class="fw-bold">{{ $student->date_of_birth }}</p>
+                            <p class="fw-bold">{{ date_format(date_create($student->date_of_birth), 'M d, Y') }}</p>
                         </div>
                         <div class="col">
                             <label class="text-secondary">Place of Birth</label>
