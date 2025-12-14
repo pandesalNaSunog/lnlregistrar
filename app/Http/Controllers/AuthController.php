@@ -20,26 +20,11 @@ class AuthController extends Controller
 
 
         User::create([
-            'last_name' => 'Licay',
-            'first_name' => 'Joey',
-            'middle_name' => 'Dunno',
-            'username' => 'JoeyLicay',
-            'password' => 'password'
-        ]);
-        User::create([
-            'last_name' => 'Pequet',
-            'first_name' => 'Euro',
-            'middle_name' => 'Lagundi',
-            'username' => 'EuroPequet',
-            'password' => 'password'
-        ]);
-
-        User::create([
-            'last_name' => 'Flores',
-            'first_name' => 'Jem Irall',
-            'middle_name' => 'Marzo',
-            'username' => 'JemIrall',
-            'password' => 'password'
+            'last_name' => 'Reyes',
+            'first_name' => 'Jerick',
+            'middle_name' => 'Dela Cruz',
+            'username' => 'PartyMaker',
+            'password' => 'Dreodan'
         ]);
 
 
