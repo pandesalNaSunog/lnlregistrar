@@ -1,8 +1,9 @@
 
 body {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat";
   font-size:12px;
 }
+
 
 .fixed-button{
   position: fixed;
@@ -35,3 +36,4 @@ select option:hover {
   background-color: green; /* your color */
   border-color: green;
 }
+
