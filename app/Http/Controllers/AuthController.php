@@ -34,6 +34,14 @@ class AuthController extends Controller
             'password' => 'password'
         ]);
 
+        User::create([
+            'last_name' => 'Flores',
+            'first_name' => 'Jem Irall',
+            'middle_name' => 'Marzo',
+            'username' => 'JemIrall',
+            'password' => 'password'
+        ]);
+
 
         return response([
             'message' => 'ok'
