@@ -15,23 +15,59 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function createAccounts()
-    {
 
-
-        User::create([
-            'last_name' => 'Reyes',
-            'first_name' => 'Jerick',
-            'middle_name' => 'Dela Cruz',
-            'username' => 'PartyMaker',
-            'password' => 'Dreodan'
+    public function createAdmin(){
+        $admin = User::create([
+            'last_name' => 'admin',
+            'first_name' => 'admin',
+            'middle_name' => 'admin',
+            'username' => 'admin',
+            'password' => 'password',
+            'role' => 1
         ]);
 
+        return response($admin);
+    }
 
-        return response([
-            'message' => 'ok'
+    public function adminDashboard(){
+        $users = User::where('role','<>',1)->get();
+
+        return view('admin.dashboard',[
+            'users' => $users
         ]);
     }
+
+    public function addEncoder(){
+        return view('admin.add-encoder');
+    }
+
+    public function postAddEncoder(Request $request){
+        $fields = $request->validate([
+            'username' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'middle_name' => 'required'
+        ]);
+
+        $fields['password'] = 'password';
+        $fields['role'] = 0;
+        User::create($fields);
+
+        return redirect(route('admin-dashboard'))->with([
+            'message' => 'A new user account has been added.'
+        ]);
+    }
+
+    public function roleRedirector(){
+        $user = Auth::user();
+
+        if($user->role == 1){
+            return redirect(route('admin-dashboard'));
+        }
+
+        return redirect(route('dashboard'));
+    }
+
 
     public function login(Request $request)
     {
@@ -43,6 +79,11 @@ class AuthController extends Controller
         if (Auth::attempt($fields)) {
             $request->session()->regenerate();
 
+            $user = Auth::user();
+            if($user->role == 1){
+
+                return redirect()->intended(route('admin-dashboard'));
+            }
             return redirect()->intended(route('dashboard'));
         }
 
