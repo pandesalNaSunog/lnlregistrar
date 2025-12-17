@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CompletionController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\GraduateController;
 use App\Http\Controllers\ProgramController;
@@ -51,6 +52,8 @@ Route::middleware('auth')->group(function(){
         Route::get('/ip-students',[StudentController::class,'ipStudents'])->name('ip-students');
         Route::get('/solo-parent',[StudentController::class, 'soloParent'])->name('solo-parent');
         Route::get('/pwd-students',[StudentController::class,'pwdStudents'])->name('pwd-students');
+        Route::get('/add-completion/{subjectEnrolled}',[CompletionController::class,'addCompletion'])->name('add-completion');
+        Route::post('/add-completion/{subjectEnrolled}',[CompletionController::class,'postAddCompletion'])->name('post-add-completion');
     });
     Route::middleware(IsAdmin::class)->group(function(){
         Route::prefix('admin')->group(function(){

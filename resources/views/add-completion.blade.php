@@ -5,20 +5,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>View Grades</title>
+    <title>Add Completion</title>
     <x-imports></x-imports>
 </head>
 
 <body>
     <x-navbar :user="$user"></x-navbar>
-
     <div class="container py-5">
         <nav style="--bs-breadcrumb-divider: '>'; color: green; text-decoration: none;" aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('grades') }}">Grades</a></li>
-                <li class="breadcrumb-item active" aria-current="page">
-                    {{ $student->last_name . ', ' . $student->first_name . ' ' . $student->middle_name }}</li>
+                <li class="breadcrumb-item" aria-current="page">
+                    <a
+                        href="{{ route('view-grades', $enrollment->id) }}">{{ $student->last_name . ', ' . $student->first_name . ' ' . $student->middle_name }}</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    Completion for {{ $subject->course_code }}
+                </li>
             </ol>
+
         </nav>
         <div class="row row-cols-1 row-cols-lg-2 g-3">
             <div class="col col-lg-3">
@@ -71,58 +76,58 @@
             </div>
             <div class="col col-lg-9">
                 <div class="card shadow">
+                    <div class="card-header">
+                        <h5 class="fw-bold"><small>Add Completion</small></h5>
+                    </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <h4 class="fw-bold">{{ $enrollment->semester . ', ' . $enrollment->academic_year }}</h4>
+                        <label for="" class="form-label">Select Term</label>
+                        <form action="{{ route('post-add-completion', $subjectEnrolled->id) }}" method="post"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <select name="term" class="form-select">
+                                <option value="prelim">Prelim</option>
+                                <option value="midterm">Midterm</option>
+                                <option value="semi-final">Semi-Final</option>
+                                <option value="final">Final</option>
+                            </select>
+                            <div class="form-floating mt-3">
+                                <input type="number" name="completion_grade" placeholder="a"
+                                    class="@error('completion_grade') is-invalid @enderror form-control">
+                                @error('completion_grade')
+                                    <x-error-text>{{ $message }}</x-error-text>
+                                @enderror
+                                <label for="" class="form-label">Completion Grade</label>
+                            </div>
+                            <label for="" class="form-label mt-3">Upload Completion Form</label>
+                            <input type="file" accept="image/*" name="completion_form"
+                                class="@error('completion_form') is-invalid @enderror form-control">
+                            @error('completion_form')
+                                <x-error-text>{{ $message }}</x-error-text>
+                            @enderror
+                            <button class="btn btn-success w-100 mt-3">Confirm</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card shadow mt-3">
+                    <div class="card-header">
+                        <h5 class="fw-bold"><small>Completion for {{ $subject->course_code }}</small></h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-reponsive">
                             <table class="table table-striped table-hover">
                                 <thead>
-                                    <th>Course Code</th>
-                                    <th>Descriptive Title</th>
-                                    <th>Lec Units</th>
-                                    <th>Lab Units</th>
-                                    <th>Prelim</th>
-                                    <th>Midterm</th>
-                                    <th>Semi-Final</th>
-                                    <th>Final</th>
+                                    <th>Term</th>
+                                    <th>Grade</th>
                                     <th>Action</th>
-                                    <th>Completion</th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($subjects as $subject)
+                                    @foreach ($completions as $completion)
                                         <tr>
-                                            <form
-                                                action="{{ route('update-grade', $subject['enrolled_subject']->id) }}"
-                                                method="post">
-                                                @csrf
-                                                <td>{{ $subject['course_code'] }}</td>
-                                                <td>{{ $subject['descriptive_title'] }}</td>
-                                                <td>{{ $subject['lec_units'] }}</td>
-                                                <td>{{ $subject['lab_units'] }}</td>
-
-
-                                                <td>
-                                                    <input type="text" class="form-control" name="prelim"
-                                                        value="{{ $subject['enrolled_subject']->prelim }}">
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control" name="midterm"
-                                                        value="{{ $subject['enrolled_subject']->midterm }}">
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control" name="semi_final"
-                                                        value="{{ $subject['enrolled_subject']->semi_final }}">
-                                                </td>
-                                                <td>
-                                                    <input type="text" class="form-control" name="final"
-                                                        value="{{ $subject['enrolled_subject']->final }}">
-                                                </td>
-                                                <td>
-                                                    <button
-                                                        class="btn btn-outline-success px-5"><small>Update</small></button>
-                                                </td>
-                                            </form>
+                                            <td>{{ $completion->term }}</td>
+                                            <td>{{ $completion->completion_grade }}</td>
                                             <td>
-                                                <a href="{{ route('add-completion', $subject['enrolled_subject']->id) }}"><button class="btn btn-outline-success">Add Completion</button></a>
+                                                <button class="btn btn-outline-success px-5">View Completion
+                                                    Form</button>
                                             </td>
                                         </tr>
                                     @endforeach
