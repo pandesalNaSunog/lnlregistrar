@@ -94,7 +94,7 @@ class ProgramController extends Controller
     }
     public function deleteSubject(Subject $subject){
 
-        Preqrequisite::where('subject_id', $subject->id)->delete();
+        Preqrequisite::where('subject_id', $subject->id)->orWhere('prerequisite_id', $subject->id)->delete();
         $courseCode = $subject->course_code;
         $subject->delete();
         return back()->with([
