@@ -92,9 +92,10 @@ class ProgramController extends Controller
     public function deleteSubject(Subject $subject){
 
         Preqrequisite::where('subject_id', $subject->id)->delete();
+        $courseCode = $subject->course_code;
         $subject->delete();
         return back()->with([
-            'message' => $subject->course_code . ' has been deleted.'
+            'message' => $courseCode . ' has been deleted.'
         ]);
     }
     public function manageCurriculum(Program $program){
