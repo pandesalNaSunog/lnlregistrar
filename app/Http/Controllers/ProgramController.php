@@ -115,7 +115,10 @@ class ProgramController extends Controller
 
                     foreach($prerequisites as $prerequisite){
                         $subject = Subject::where('id', $prerequisite->prerequisite_id)->first();
-                        $prerequisiteString .= $subject->course_code . ", ";
+                        if($subject){
+
+                            $prerequisiteString .= $subject->course_code . ", ";
+                        }
                     }
                 }
                 $subjectPrerequisites[] = $prerequisiteString;
