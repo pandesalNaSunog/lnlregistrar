@@ -49,7 +49,38 @@
                                         <td>{{ $subject->lab_units }}</td>
                                         <td>{{ $data['prerequisites'][$key] }}</td>
                                         <td>
-                                            <a href="{{ route('add-prerequisite',$subject->id) }}"><button class="btn btn-outline-success"><small>Add Prerequisite</small></button></a>
+                                            <div class="dropdown">
+                                                <button data-bs-toggle="dropdown" class="dropdown-toggle btn btn-outline-success">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a href="{{ route('add-prerequisite',$subject->id) }}" class="dropdown-item"><small>Add Prerequisite</small></a>
+                                                    </li>
+                                                    <li>
+                                                        <hr class="dropdown-divider">
+                                                    </li>
+                                                    <li>
+                                                        <a href="" class="dropdown-item"><small>Edit</small></a>
+                                                    </li>
+                                                    <li>
+                                                        <form id="delete-form-{{ $subject->id }}" action="{{ route('delete-subject',$subject->id) }}" method="post">
+                                                            @csrf
+                                                            <button class="dropdown-item"><small>Delete</small></a></button>
+                                                        </form>
+                                                        <script>
+                                                            var deleteForm = document.getElementById('delete-form-{{ $subject->id }}');
+                                                            deleteForm.addEventListener('submit', function(event){
+                                                                const confirmation = confirm("Are your sure you want to delete this subject?");
+                                                                if(!confirmation){
+                                                                    event.preventDefault();
+                                                                }
+                                                            })
+                                                        </script>
+                                                    </li>
+                                                </ul>
+                                            </div>
+
                                         </td>
                                     </tr>
                                     @endforeach
