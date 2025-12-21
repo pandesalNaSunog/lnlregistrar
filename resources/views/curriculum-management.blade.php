@@ -61,7 +61,7 @@
                                                         <hr class="dropdown-divider">
                                                     </li>
                                                     <li>
-                                                        <a href="" class="dropdown-item"><small>Edit</small></a>
+                                                        <a href="{{ route('edit-subject',$subject->id) }}" class="dropdown-item"><small>Edit</small></a>
                                                     </li>
                                                     <li>
                                                         <form id="delete-form-{{ $subject->id }}" action="{{ route('delete-subject',$subject->id) }}" method="post">

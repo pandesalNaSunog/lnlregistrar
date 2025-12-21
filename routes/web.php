@@ -21,6 +21,8 @@ Route::middleware('auth')->group(function(){
     Route::get('/change-password',[AuthController::class,'changePassword'])->name('change-password');
     Route::post('/change-password',[AuthController::class,'postChangePassword'])->name('post-change-password');
     Route::middleware(isEncoder::class)->group(function(){
+        Route::post('/edit-subject/{subject}',[ProgramController::class,'postEditSubject'])->name('post-edit-subject');
+        Route::get('/edit-subject/{subject}', [ProgramController::class,'editSubject'])->name('edit-subject');
         Route::post('/delete-subject/{subject}',[ProgramController::class,'deleteSubject'])->name('delete-subject');
         Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
         Route::get('/curriculum',[ProgramController::class,'programs'])->name('curriculum');

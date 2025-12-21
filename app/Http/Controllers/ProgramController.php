@@ -101,6 +101,31 @@ class ProgramController extends Controller
             'message' => $courseCode . ' has been deleted.'
         ]);
     }
+    public function postEditSubject(Request $request, Subject $subject){
+        $fields = $request->validate([
+            'course_code' => 'required',
+            'descriptive_title' => 'required',
+            'lab_units' => 'required',
+            'lec_units' => 'required'
+        ]);
+
+        $subject->update($fields);
+
+        return redirect(route('manage-curriculum',$subject->program_id))->with([
+
+            'message' => 'Subject details has been updated.'
+        ]);
+    }
+
+    public function editSubject(Subject $subject){
+        $user = Auth::user();
+        $program = Program::where('id', $subject->program_id)->first();
+        return view('edit-subject',[
+            'user' => $user,
+            'subject' => $subject,
+            'program' => $program
+        ]);
+    }
     public function manageCurriculum(Program $program){
 
         function getPrerequisites($subjects){
