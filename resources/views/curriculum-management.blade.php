@@ -49,7 +49,7 @@
                                         <td>{{ $subject->lab_units }}</td>
                                         <td>{{ $data['prerequisites'][$key] }}</td>
                                         <td>
-                                            <a href="{{ route('add-prerequisite',$subject->id) }}"><button class="btn btn-outline-success px-5"><small>Add Prerequisite</small></button></a>
+                                            <a href="{{ route('add-prerequisite',$subject->id) }}"><button class="btn btn-outline-success"><small>Add Prerequisite</small></button></a>
                                         </td>
                                     </tr>
                                     @endforeach
