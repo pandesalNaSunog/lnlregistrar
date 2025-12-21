@@ -71,7 +71,7 @@
                                                         <script>
                                                             var deleteForm = document.getElementById('delete-form-{{ $subject->id }}');
                                                             deleteForm.addEventListener('submit', function(event){
-                                                                const confirmation = confirm("Are your sure you want to delete this subject?");
+                                                                const confirmation = confirm("Are you sure you want to delete this subject?");
                                                                 if(!confirmation){
                                                                     event.preventDefault();
                                                                 }
