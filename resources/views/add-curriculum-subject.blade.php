@@ -27,10 +27,10 @@
                     @csrf
                     <label><small>Select Year</small></label>
                     <select name="year"class="form-select">
-                        <option value="First Year" selected>First Year</option>
-                        <option value="Second Year">Second Year</option>
-                        <option value="Third Year">Third Year</option>
-                        <option value="Fourth Year">Fourth Year</option>
+                        <option value="First Year-1" selected>First Year</option>
+                        <option value="Second Year-2">Second Year</option>
+                        <option value="Third Year-3">Third Year</option>
+                        <option value="Fourth Year-4">Fourth Year</option>
                     </select>
                     <label class="mt-3"><small>Select Semester</small></label>
                     <select name="semester"class="form-select">

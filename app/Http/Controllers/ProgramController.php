@@ -75,9 +75,12 @@ class ProgramController extends Controller
             'lab_units' => 'required',
             'lec_units' => 'required'
         ]);
+
+        $yearArray = explode('-',$request->year);
         $fields['program_id'] = $program->id;
-        $fields['year'] = $request->year;
+        $fields['year'] = $yearArray[0];
         $fields['semester'] = $request->semester;
+        $fields['numeric_year'] = $yearArray[1];
 
         $subject = Subject::create($fields);
         return redirect(route('manage-curriculum',$program->id));
@@ -123,7 +126,7 @@ class ProgramController extends Controller
 
         $semesters = [];
 
-        $programSubjects = Subject::where('program_id', $program->id)->orderBy('year','asc')->orderBy('semester','asc')->get();
+        $programSubjects = Subject::where('program_id', $program->id)->orderBy('numeric_year','asc')->orderBy('semester','asc')->get();
         $currentYear = "";
         $currentSemester = "";
         foreach($programSubjects as $subject){

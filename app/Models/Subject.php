@@ -16,6 +16,7 @@ class Subject extends Model
         'course_code',
         'descriptive_title',
         'lab_units',
-        'lec_units'
+        'lec_units',
+        'numeric_year'
     ];
 }
