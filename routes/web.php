@@ -18,7 +18,8 @@ Route::get('/create-admin',[AuthController::class,'createAdmin']);
 Route::middleware('auth')->group(function(){
     Route::get('/role-redirector',[AuthController::class,'roleRedirector'])->name('role-redirector');
     Route::post('/logout',[AuthController::class,'logout'])->name('logout');
-
+    Route::get('/change-password',[AuthController::class,'changePassword'])->name('change-password');
+    Route::post('/change-password',[AuthController::class,'postChangePassword'])->name('post-change-password');
     Route::middleware(isEncoder::class)->group(function(){
         Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
         Route::get('/curriculum',[ProgramController::class,'programs'])->name('curriculum');

@@ -12,6 +12,7 @@ use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use App\Models\SubjectEnrolled;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -34,6 +35,35 @@ class AuthController extends Controller
 
         return view('admin.dashboard',[
             'users' => $users
+        ]);
+    }
+    public function changePassword(){
+        $user = Auth::user();
+
+        return view('change-password',[
+            'user' => $user
+        ]);
+    }
+
+    public function postChangePassword(Request $request){
+        $fields = $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|confirmed',
+        ]);
+
+        $user = Auth::user();
+        if(!Hash::check($request->current_password,$user->password)){
+            return back()->withErrors([
+                'current_password' => 'Invalid password'
+            ]);
+        }
+
+        $user->update([
+            'password' => $fields['new_password']
+        ]);
+
+        return back()->with([
+            'message' => 'Password has been changed.'
         ]);
     }
 

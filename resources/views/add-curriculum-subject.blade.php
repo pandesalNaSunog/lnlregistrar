@@ -36,6 +36,7 @@
                     <select name="semester"class="form-select">
                         <option value="First Semester" selected>First Semester</option>
                         <option value="Second Semester">Second Semester</option>
+                        <option value="Summer">Summer</option>
                     </select>
                     
                     <div class="form-floating mt-3">

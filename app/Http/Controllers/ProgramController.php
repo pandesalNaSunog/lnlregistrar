@@ -112,56 +112,41 @@ class ProgramController extends Controller
             return $subjectPrerequisites;
         }
 
+        $semesters = [];
+
+        $programSubjects = Subject::where('program_id', $program->id)->orderBy('year','asc')->orderBy('semester','asc')->get();
+        $currentYear = "";
+        $currentSemester = "";
+        foreach($programSubjects as $subject){
+            if($subject->year != $currentYear || $currentSemester != $subject->semester){
+                $semesters[] = [
+                    'year' => $subject->year,
+                    'semester' => $subject->semester
+                ];
+                $currentYear = $subject->year;
+                $currentSemester = $subject->semester;
+            }
+        }
+
+
+        $curriculumData = [];
+        foreach($semesters as $semester){
+            $subjects = Subject::where('year', $semester['year'])->where('semester', $semester['semester'])->where('program_id', $program->id)->get();
+            
+            $prerequisites = getPrerequisites($subjects);
+            $curriculumData[] = [
+                'year' => $semester['year'],
+                'semester' => $semester['semester'],
+                'subjects' => $subjects,
+                'prerequisites' => $prerequisites
+            ];
+        }
         $user = Auth::user();
 
-        $firstYearFirstSemesterSubjects = Subject::where('program_id',$program->id)->where('year','First Year')->where('semester','First Semester')->get();
-
-        $firstYearFirstSemesterPrerequisites = getPrerequisites($firstYearFirstSemesterSubjects);
-
-        $firstYearSecondSemesterSubjects = Subject::where('program_id',$program->id)->where('year','First Year')->where('semester','Second Semester')->get();
-
-        $firstYearSecondSemesterPrerequisites = getPrerequisites($firstYearSecondSemesterSubjects);
-
-        $secondYearFirstSemesterSubjects = Subject::where('program_id',$program->id)->where('year','Second Year')->where('semester','First Semester')->get();
-
-        $secondYearFirstSemesterPrerequisites = getPrerequisites($secondYearFirstSemesterSubjects);
-
-        $secondYearSecondSemesterSubjects = Subject::where('program_id',$program->id)->where('year','Second Year')->where('semester','Second Semester')->get();
-        $secondYearSecondSemesterPrerequisites = getPrerequisites($secondYearSecondSemesterSubjects);
-
-        $thirdYearFirstSemesterSubjects = Subject::where('program_id',$program->id)->where('year','Third Year')->where('semester','First Semester')->get();
-
-        $thirdYearFirstSemesterPrerequisites = getPrerequisites(($thirdYearFirstSemesterSubjects));
-
-        $thirdYearSecondSemesterSubjects = Subject::where('program_id',$program->id)->where('year','third Year')->where('semester','Second Semester')->get();
-        $thirdYearSecondSemesterPrerequisites = getPrerequisites($thirdYearSecondSemesterSubjects);
-
-        $fourthYearFirstSemesterSubjects = Subject::where('program_id',$program->id)->where('year','Fourth Year')->where('semester','First Semester')->get();
-
-        $fourthYearFirstSemesterPrerequisites = getPrerequisites($fourthYearFirstSemesterSubjects);
-
-        $fourthYearSecondSemesterSubjects = Subject::where('program_id',$program->id)->where('year','Fourth Year')->where('semester','Second Semester')->get();
-
-        $fourthYearSecondSemesterPrerequisites = getPrerequisites($fourthYearSecondSemesterSubjects);
         return view('curriculum-management',[
-            'firstYearFirstSemester' => $firstYearFirstSemesterSubjects,
-            'firstYearFirstSemesterPrerequisites' => $firstYearFirstSemesterPrerequisites,
-            'firstYearSecondSemester' => $firstYearSecondSemesterSubjects,
-            'firstYearSecondSemesterPrerequisites' => $firstYearSecondSemesterPrerequisites,
-            'secondYearFirstSemester' => $secondYearFirstSemesterSubjects,
-            'secondYearFirstSemesterPrerequisites' => $secondYearFirstSemesterPrerequisites,
-            'secondYearSecondSemester' => $secondYearSecondSemesterSubjects,
-            'secondYearSecondSemesterPrerequisites' => $secondYearSecondSemesterPrerequisites,
-            'thirdYearFirstSemester' => $thirdYearFirstSemesterSubjects,
-            'thirdYearFirstSemesterPrerequisites' => $thirdYearFirstSemesterPrerequisites,
-            'thirdYearSecondSemester' => $thirdYearSecondSemesterSubjects,
-            'thirdYearSecondSemesterPrerequisites' => $thirdYearSecondSemesterPrerequisites,
-            'fourthYearFirstSemester' => $fourthYearFirstSemesterSubjects,
-            'fourthYearFirstSemesterPrerequisites' => $fourthYearFirstSemesterPrerequisites,
-            'fourthYearSecondSemester' => $fourthYearSecondSemesterSubjects,
-            'fourthYearSecondSemesterPrerequisites' => $fourthYearSecondSemesterPrerequisites,
+            'user' => $user,
             'program' => $program,
-            'user' => $user
+            'curriculumData' => $curriculumData
         ]);
     }
     public function programs(){

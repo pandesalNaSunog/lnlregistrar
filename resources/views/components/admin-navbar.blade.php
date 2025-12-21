@@ -24,6 +24,12 @@
                         <a href="#" class="nav-link active dropdown-toggle" data-bs-toggle="dropdown">Account</a>
                         <ul class="dropdown-menu">
                             <li>
+                                <a class="dropdown-item" href="{{ route('change-password') }}">Change Password</a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
                                     <button class="dropdown-item">Log Out</button>
