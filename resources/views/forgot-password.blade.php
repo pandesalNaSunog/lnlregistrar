@@ -26,7 +26,9 @@
                         <div class="form-floating my-0">
                             <input type="email" name="email" placeholder="a" class="form-control @error('email') is-invalid @enderror">
                             <label for=""><small>Email</small></label>
-                            
+                            @error('email')
+                            <x-error-text>{{ $message }}</x-error-text>
+                            @enderror
                         </div>
                         
                         
