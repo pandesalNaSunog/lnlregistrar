@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <title>The LNL Registrar</title>
 
 </head>
+
 <body class="bg-light">
     <div class="container py-5">
         <div class="text-center">
@@ -24,24 +26,29 @@
                     <form action="{{ route('post-login') }}" method="post">
                         @csrf
                         <div class="form-floating my-0">
-                            <input type="text" name="username" placeholder="Username" class="form-control @error('username') is-invalid @enderror">
+                            <input type="text" name="username" placeholder="Username"
+                                class="form-control @error('username') is-invalid @enderror">
                             <label for=""><small>Username</small></label>
-                            
+
                         </div>
                         @error('username')
-                        <x-error-text>{{ $message }}</x-error-text>
+                            <x-error-text>{{ $message }}</x-error-text>
                         @enderror
                         <div class="form-floating mt-3">
-                            <input type="password" name="password" placeholder="Password" class="form-control @error('username') is-invalid @enderror ">
+                            <input type="password" name="password" placeholder="Password"
+                                class="form-control @error('username') is-invalid @enderror ">
                             <label for=""><small>Password</small></label>
-                            
+
                         </div>
-                        
+
                         <button class="btn btn-success w-100 mt-3">Log In</button>
                     </form>
+                    <a href="{{ route('forgot-password') }}"><button class="w-100 mt-3 btn btn-link">I Forgot my
+                            Password</button></a>
                 </div>
             </div>
         </div>
     </div>
 </body>
+
 </html>

@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use App\Models\SubjectEnrolled;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -275,4 +276,24 @@ class AuthController extends Controller
         }
         return view('welcome');
     }
+    public function forgotPassword(){
+        return view('forgot-password');
+    }
+    public function postForgotPassword(Request $request){
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+
+        $status = Password::sendResetLink($request->only('email'));
+
+        return $status === Password::RESET_LINK_SENT
+        ? back()->with(['message' => __($status)])
+        : back()->withErrors(['email' => __($status)]);
+    }
+
+    public function passwordReset(string $token){
+
+        return view('reset-password', ['token' => $token]);
+    }
+
 }
