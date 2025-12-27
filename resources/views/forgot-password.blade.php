@@ -21,7 +21,7 @@
             </div>
             <div class="card shadow mt-3">
                 <div class="card-body">
-                    <form action="{{ route('post-forgot-password') }}" method="post">
+                    <form action="{{ route('password.email') }}" method="post">
                         @csrf
                         <div class="form-floating my-0">
                             <input type="email" name="email" placeholder="a" class="form-control @error('email') is-invalid @enderror">

@@ -43,7 +43,7 @@
 
                         <button class="btn btn-success w-100 mt-3">Log In</button>
                     </form>
-                    <a href="{{ route('forgot-password') }}"><button class="w-100 mt-3 btn btn-link">I Forgot my
+                    <a href="{{ route('password.request') }}"><button class="w-100 mt-3 btn btn-link">I Forgot my
                             Password</button></a>
                 </div>
             </div>
