@@ -1,12 +1,61 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <x-imports></x-imports>
+    <title>The LNL Registrar</title>
+
 </head>
-<body>
-    
+
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="text-center">
+            <img src="/lnl.png" style="height: 150px; width: 150px;"alt="" class="img-fluid">
+            <h1 class="fw-bold mt-2">The <span class="text-success">LNL</span> Registrar</h1>
+        </div>
+
+        <div class="col col-lg-4 mx-auto">
+            <div class="text-center">
+                Reset Password
+            </div>
+            <div class="card shadow mt-3">
+                <div class="card-body">
+                    <form action="{{ route('password.update') }}" method="post">
+                        @csrf
+                        <input type="hidden" name="token" value="{{ $token }}">
+                        <div class="form-floating my-0">
+                            <input type="email" name="email" placeholder="a"
+                                class="form-control @error('email') is-invalid @enderror">
+                            <label for=""><small>Email</small></label>
+
+                        </div>
+                        @error('email')
+                            <x-error-text>{{ $message }}</x-error-text>
+                        @enderror
+                        <div class="form-floating mt-3">
+                            <input type="password" name="password" placeholder="Password"
+                                class="form-control @error('password') is-invalid @enderror ">
+                            <label for=""><small>Password</small></label>
+                        </div>
+                        @error('password')
+                            <x-error-text>{{ $message }}</x-error-text>
+                        @enderror
+
+                        <div class="form-floating mt-3">
+                            <input type="password" name="password_confirmation" placeholder="Password"
+                                class="form-control @error('password') is-invalid @enderror ">
+                            <label for=""><small>Password</small></label>
+                        </div>
+
+                        <button class="btn btn-success w-100 mt-3">Reset Password</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
+
 </html>

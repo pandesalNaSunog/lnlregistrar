@@ -8,18 +8,21 @@ use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Semester;
 use App\Models\Enrollment;
+use Illuminate\Support\Str;
 use App\Models\AcademicYear;
 use Illuminate\Http\Request;
 use App\Models\SubjectEnrolled;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
 
 
 class AuthController extends Controller
 {
 
-    public function createAdmin(){
+    public function createAdmin()
+    {
         $admin = User::create([
             'last_name' => 'admin',
             'first_name' => 'admin',
@@ -32,29 +35,32 @@ class AuthController extends Controller
         return response($admin);
     }
 
-    public function adminDashboard(){
-        $users = User::where('role','<>',1)->get();
+    public function adminDashboard()
+    {
+        $users = User::where('role', '<>', 1)->get();
 
-        return view('admin.dashboard',[
+        return view('admin.dashboard', [
             'users' => $users
         ]);
     }
-    public function changePassword(){
+    public function changePassword()
+    {
         $user = Auth::user();
 
-        return view('change-password',[
+        return view('change-password', [
             'user' => $user
         ]);
     }
 
-    public function postChangePassword(Request $request){
+    public function postChangePassword(Request $request)
+    {
         $fields = $request->validate([
             'current_password' => 'required',
             'new_password' => 'required|confirmed',
         ]);
 
         $user = Auth::user();
-        if(!Hash::check($request->current_password,$user->password)){
+        if (!Hash::check($request->current_password, $user->password)) {
             return back()->withErrors([
                 'current_password' => 'Invalid password'
             ]);
@@ -69,11 +75,13 @@ class AuthController extends Controller
         ]);
     }
 
-    public function addEncoder(){
+    public function addEncoder()
+    {
         return view('admin.add-encoder');
     }
 
-    public function postAddEncoder(Request $request){
+    public function postAddEncoder(Request $request)
+    {
         $fields = $request->validate([
             'username' => 'required',
             'first_name' => 'required',
@@ -90,10 +98,11 @@ class AuthController extends Controller
         ]);
     }
 
-    public function roleRedirector(){
+    public function roleRedirector()
+    {
         $user = Auth::user();
 
-        if($user->role == 1){
+        if ($user->role == 1) {
             return redirect(route('admin-dashboard'));
         }
 
@@ -112,7 +121,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
-            if($user->role == 1){
+            if ($user->role == 1) {
 
                 return redirect()->intended(route('admin-dashboard'));
             }
@@ -133,7 +142,7 @@ class AuthController extends Controller
 
         $academicYear = date('Y') . '-' . date('Y') + 1;
         $semester = Semester::first()->semester;
-        
+
         foreach ($programs as $program) {
             foreach ($yearLevels as $level) {
                 $maxEnrolledSubjects = 0;
@@ -147,12 +156,12 @@ class AuthController extends Controller
                         $subjectsEnrolled = SubjectEnrolled::where('enrollment_id', $enrollment->id)->get();
 
                         //compare if max enrolled subjects is less than number of subjects enrolled
-                        if($maxEnrolledSubjects < count($subjectsEnrolled)){
+                        if ($maxEnrolledSubjects < count($subjectsEnrolled)) {
                             $maxEnrolledSubjects = $maxEnrolledSubjects + (count($subjectsEnrolled) - $maxEnrolledSubjects);
-                        
+
                         }
-                        foreach($subjectsEnrolled as $enrolled){
-                            
+                        foreach ($subjectsEnrolled as $enrolled) {
+
                             $subjectProper = Subject::where('id', $enrolled->subject_id)->first();
                             $units = $subjectProper->lec_units + $subjectProper->lab_units;
                             $enrolledSubjects[] = [
@@ -170,8 +179,8 @@ class AuthController extends Controller
                     return $a['student']->last_name <=> $b['student']->last_name;
                 });
 
-                for($index = 0;$index < $maxEnrolledSubjects;$index ++){
-                    $subjectTableHeads[] = ['Subject '.$index+1,'Units'];
+                for ($index = 0; $index < $maxEnrolledSubjects; $index++) {
+                    $subjectTableHeads[] = ['Subject ' . $index + 1, 'Units'];
                 }
 
                 $enrollmentReport[] = [
@@ -188,7 +197,8 @@ class AuthController extends Controller
             'enrollmentReport' => $enrollmentReport
         ]);
     }
-    public function promotionReport(){
+    public function promotionReport()
+    {
         $user = Auth::user();
         $programs = Program::orderBy('program', 'asc')->get();
 
@@ -197,7 +207,7 @@ class AuthController extends Controller
 
         $academicYear = date('Y') . '-' . date('Y') + 1;
         $semester = Semester::first()->semester;
-        
+
         foreach ($programs as $program) {
             foreach ($yearLevels as $level) {
                 $maxEnrolledSubjects = 0;
@@ -211,12 +221,12 @@ class AuthController extends Controller
                         $subjectsEnrolled = SubjectEnrolled::where('enrollment_id', $enrollment->id)->get();
 
                         //compare if max enrolled subjects is less than number of subjects enrolled
-                        if($maxEnrolledSubjects < count($subjectsEnrolled)){
+                        if ($maxEnrolledSubjects < count($subjectsEnrolled)) {
                             $maxEnrolledSubjects = $maxEnrolledSubjects + (count($subjectsEnrolled) - $maxEnrolledSubjects);
-                        
+
                         }
-                        foreach($subjectsEnrolled as $enrolled){
-                            
+                        foreach ($subjectsEnrolled as $enrolled) {
+
                             $subjectProper = Subject::where('id', $enrolled->subject_id)->first();
 
                             $enrolledSubjects[] = [
@@ -234,8 +244,8 @@ class AuthController extends Controller
                     return $a['student']->last_name <=> $b['student']->last_name;
                 });
 
-                for($index = 0;$index < $maxEnrolledSubjects;$index ++){
-                    $subjectTableHeads[] = ['Subject '.$index+1,'Grade'];
+                for ($index = 0; $index < $maxEnrolledSubjects; $index++) {
+                    $subjectTableHeads[] = ['Subject ' . $index + 1, 'Grade'];
                 }
 
                 $promotionReport[] = [
@@ -277,10 +287,12 @@ class AuthController extends Controller
         }
         return view('welcome');
     }
-    public function forgotPassword(){
+    public function forgotPassword()
+    {
         return view('forgot-password');
     }
-    public function postForgotPassword(Request $request){
+    public function postForgotPassword(Request $request)
+    {
         $request->validate([
             'email' => 'required|email'
         ]);
@@ -288,13 +300,40 @@ class AuthController extends Controller
         $status = Password::sendResetLink($request->only('email'));
 
         return $status === Password::RESET_LINK_SENT
-        ? back()->with(['message' => __($status)])
-        : back()->withErrors(['email' => __($status)]);
+            ? back()->with(['message' => __($status)])
+            : back()->withErrors(['email' => __($status)]);
     }
 
-    public function passwordReset(string $token){
+    public function passwordReset(string $token)
+    {
 
         return view('reset-password', ['token' => $token]);
+    }
+
+    public function postPasswordReset(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:8|confirmed',
+        ]);
+
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => Hash::make($password)
+                ])->setRememberToken(Str::random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('status', __($status))
+            : back()->withErrors(['email' => [__($status)]]);
     }
 
 }
