@@ -27,7 +27,7 @@
                             @enderror
                         </div>
                         <div class="form-floating">
-                            <input type="email" name="username" placeholder="a" class="form-control @error('email') is-invalid @enderror">
+                            <input type="email" name="email" placeholder="a" class="mt-3 form-control @error('email') is-invalid @enderror">
                             <label for=""><small>Email</small></label>
                             @error('email')
                             <x-error-text>{{ $message }}</x-error-text>
