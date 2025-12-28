@@ -86,7 +86,8 @@ class AuthController extends Controller
             'username' => 'required',
             'first_name' => 'required',
             'last_name' => 'required',
-            'middle_name' => 'required'
+            'middle_name' => 'required',
+            'email' => 'required|unique:users,email'
         ]);
 
         $fields['password'] = 'password';
