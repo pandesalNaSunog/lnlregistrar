@@ -84,7 +84,7 @@ class ProgramController extends Controller
 
         $subject = Subject::create($fields);
         return redirect(route('manage-curriculum',$program->id))->with([
-            'message' => $subject->course_code . ' has been added successfulacious.'
+            'message' => $subject->course_code . ' has been added successfully.'
         ]);
     }
 
