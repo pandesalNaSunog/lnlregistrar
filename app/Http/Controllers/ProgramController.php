@@ -83,7 +83,9 @@ class ProgramController extends Controller
         $fields['numeric_year'] = $yearArray[1];
 
         $subject = Subject::create($fields);
-        return redirect(route('manage-curriculum',$program->id));
+        return redirect(route('manage-curriculum',$program->id))->with([
+            'message' => $subject->course_code . ' has been added successfulacious.'
+        ]);
     }
 
     public function addSubjectView(Program $program){
